@@ -8,43 +8,56 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background:#121212; color:white; }
 
-        /* HEADER */
-        header { background:#1a1d23; padding: 20px; border-bottom: 2px solid #24272c; }
-        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+        /* HEADER E PESQUISA */
+        header { background:#1a1d23; padding: 15px; border-bottom: 2px solid #24272c; }
+        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
         
-        .logo-area { display: flex; flex-direction: column; gap: 2px; }
-        .logo-area h1 { font-size: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .logo-area p { font-size: 13px; color: #4da3ff; font-weight: bold; }
+        .logo-area { display: flex; flex-direction: column; }
+        .logo-area h1 { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-area p { font-size: 12px; color: #4da3ff; font-weight: bold; }
         
-        .pesquisa-area { width: 400px; }
-        .pesquisa-area input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
+        .pesquisa-area { width: 100%; max-width: 300px; }
+        .pesquisa-area input { 
+            width: 100%; padding: 10px 20px; border-radius: 25px; 
+            border: 2px solid #2196f3; background: #0d0d0d; color: #fff; 
+            font-size: 16px; outline: none; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.2);
+        }
+        .pesquisa-area input:focus { border-color: #4da3ff; box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
 
         /* ABAS */
         .abas { background:#1a1d23; display:flex; overflow-x:auto; border-bottom: 1px solid #333; justify-content: center; padding: 10px 0; }
-        .abas button { background:none; border:none; color:#777; padding:10px 15px; cursor:pointer; white-space:nowrap; font-weight: bold; text-transform: uppercase; font-size: 13px; }
+        .abas button { background:none; border:none; color:#777; padding:8px 15px; cursor:pointer; white-space:nowrap; font-weight: bold; text-transform: uppercase; font-size: 11px; }
         .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
 
-        /* CONTEÚDO */
-        main { padding:20px; max-width: 1000px; margin: 0 auto; }
+        /* CONTEÚDO E CARD COMPACTO */
+        main { padding: 15px; max-width: 800px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
-        .card { background:#1a1d23; padding:25px; border-radius:10px; border: 1px solid #333; }
-        h2 { color: #2196f3; font-size: 16px; margin-bottom: 20px; border-left: 4px solid #2196f3; padding-left: 10px; }
+        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; }
+        h2 { color: #2196f3; font-size: 14px; margin-bottom: 12px; border-left: 3px solid #2196f3; padding-left: 8px; }
 
-        /* FORMULÁRIO */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { margin-bottom: 15px; }
-        label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #121212; color: #fff; }
-        .full { grid-column: span 2; }
-        .btn-salvar { width: 100%; padding: 15px; background: #2196f3; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* FORMULÁRIO COMPACTO */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+        label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; }
+        input { 
+            width: 100%; padding: 8px 10px; border-radius: 8px; 
+            border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; 
+        }
+        .btn-salvar { 
+            width: 100%; padding: 10px; border: none; border-radius: 20px; 
+            font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white;
+            background: linear-gradient(90deg, #2196f3, #1565c0);
+        }
 
-        /* RESPONSIVIDADE CELULAR */
-        @media (max-width: 768px) {
+        /* RESPONSIVIDADE */
+        @media (min-width: 600px) {
+            .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .full { grid-column: span 2; }
+        }
+        @media (max-width: 600px) {
             .topo { flex-direction: column; align-items: center; text-align: center; }
-            .pesquisa-area { width: 100%; }
-            .form-grid { grid-template-columns: 1fr; }
-            .full { grid-column: span 1; }
+            .pesquisa-area { max-width: 100%; }
         }
     </style>
 </head>
@@ -57,7 +70,7 @@
             <p>CNPJ: 62.125.027/0001-68</p>
         </div>
         <div class="pesquisa-area">
-            <input type="text" placeholder="Pesquisar por nome ou placa...">
+            <input type="text" placeholder="Pesquisar...">
         </div>
     </div>
 </header>
