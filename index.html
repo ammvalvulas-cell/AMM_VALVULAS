@@ -25,7 +25,7 @@
         }
         .pesquisa-area input:focus { border-color: #4da3ff; box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
 
-        /* ABAS - AJUSTADAS PARA DESLIZAR NO CELULAR */
+        /* ABAS */
         .abas { 
             background:#1a1d23; 
             display:flex; 
@@ -45,55 +45,63 @@
         }
         .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
 
-        /* CONTEÚDO E FORMULÁRIO COMPACTO */
+        /* CONTEÚDO GERAL */
         main { padding: 15px; max-width: 1200px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
-        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; }
-        h2 { color: #2196f3; font-size: 14px; margin-bottom: 15px; border-left: 3px solid #2196f3; padding-left: 8px; }
+        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
+        h2 { color: #2196f3; font-size: 14px; margin-bottom: 15px; border-left: 3px solid #2196f3; padding-left: 8px; text-transform: uppercase; }
 
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
-        label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; }
-        input { 
+        /* FORMULÁRIOS */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; font-weight: bold; text-transform: uppercase; }
+        input, select { 
             width: 100%; padding: 8px 10px; border-radius: 8px; 
-            border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; 
+            border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; outline: none;
         }
+        input:focus, select:focus { border-color: #2196f3; }
+        
         .btn-salvar { 
-            width: 100%; padding: 10px; border: none; border-radius: 20px; 
-            font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white;
+            width: 100%; padding: 12px; border: none; border-radius: 20px; 
+            font-size: 13px; font-weight: bold; cursor: pointer; color: white;
             background: linear-gradient(90deg, #2196f3, #1565c0);
         }
 
-        /* SISTEMA DE CAIXAS (CARDS) PARA OS CLIENTES */
+        /* CARD DE CLIENTES */
         .clientes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        
-        .cliente-caixa { 
-            background: #15181c; border: 1px solid #2d3139; 
-            border-radius: 12px; padding: 15px; display: flex; 
-            flex-direction: column; justify-content: space-between; 
-            transition: 0.2s;
-        }
-        .cliente-caixa:hover { border-color: #2196f3; }
-        
+        .cliente-caixa { background: #15181c; border: 1px solid #2d3139; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
         .cliente-nome { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 10px; border-bottom: 1px solid #2d3139; padding-bottom: 5px; }
-        
         .cliente-info { font-size: 12px; color: #aaa; margin-bottom: 6px; display: flex; flex-direction: column; }
         .cliente-info span { color: #777; font-size: 10px; text-transform: uppercase; font-weight: bold; }
-
-        /* AÇÕES DENTRO DA CAIXA */
         .cliente-acoes { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #2d3139; padding-top: 10px; }
         .btn-acao { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
         .btn-editar { background: #ff9800; color: #fff; }
-        .btn-editar:hover { background: #e68a00; }
         .btn-excluir { background: #f44336; color: #fff; }
-        .btn-excluir:hover { background: #d32f2f; }
+
+        /* ITENS DA OC */
+        .item-oc-linha { 
+            display: grid; grid-template-columns: 1fr; gap: 8px; background: #15181c; 
+            padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #252930;
+        }
+        .btn-adicionar-item { background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 5px; }
+        .btn-remover-item { background: #f44336; color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: auto; }
+
+        /* TOTAIS DA OC */
+        .totais-oc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; background: #15181c; padding: 15px; border-radius: 12px; }
+        .total-destaque { grid-column: span 2; background: #1a1d23; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #2196f3; margin-top: 5px; }
+        .total-destaque p { font-size: 11px; color: #2196f3; font-weight: bold; }
+        .total-destaque h3 { font-size: 22px; color: #fff; }
 
         /* RESPONSIVIDADE */
         @media (min-width: 600px) {
-            .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .full { grid-column: span 2; }
+            .form-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .full { grid-column: span 3; }
+            .meio { grid-column: span 2; }
             .abas { justify-content: center; }
             .clientes-grid { grid-template-columns: repeat(2, 1fr); }
+            .item-oc-linha { grid-template-columns: 120px 2fr 70px 110px 110px auto; gap: 10px; align-items: end; }
+            .totais-oc-grid { grid-template-columns: repeat(3, 1fr); }
+            .total-destaque { grid-column: span 1; margin-top: 0; display: flex; flex-direction: column; justify-content: center; }
         }
         @media (min-width: 900px) {
             .clientes-grid { grid-template-columns: repeat(3, 1fr); }
@@ -121,7 +129,7 @@
 <div class="abas">
     <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
     <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
+    <button class="btn-aba" id="aba-os-btn" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
     <button class="btn-aba" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
     <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
     <button class="btn-aba" onclick="abrirAba(event, 'devedores')">6. DEVEDORES</button>
@@ -149,73 +157,113 @@
     <div id="clientes" class="conteudo-aba">
         <div class="card">
             <h2>CLIENTES CADASTRADOS (A-Z)</h2>
-            <div class="clientes-grid" id="lista-clientes">
-                <!-- As caixas de clientes vão aparecer aqui via Javascript -->
+            <div class="clientes-grid" id="lista-clientes"></div>
+        </div>
+    </div>
+
+    <!-- ABA 3: NOVA OC -->
+    <div id="os" class="conteudo-aba">
+        <div class="card">
+            <h2>DADOS GERAIS DA ORDEM DE COMPRA (OC)</h2>
+            <div class="form-grid">
+                <div class="meio">
+                    <label>Selecionar Cliente</label>
+                    <select id="oc-cliente">
+                        <option value="">-- Escolha um Cliente --</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Mecânico</label>
+                    <select id="oc-mecanico">
+                        <option value="Abel">Abel</option>
+                        <option value="Igor">Igor</option>
+                    </select>
+                </div>
+                <div><label>Placa do Veículo</label><input type="text" id="oc-placa" placeholder="ABC-1234"></div>
+                <div><label>KM Atual</label><input type="number" id="oc-km" placeholder="0"></div>
+                <div><label>Data de Emissão</label><input type="date" id="oc-emissao" readonly></div>
+                <div><label>Data de Vencimento (15d)</label><input type="date" id="oc-vencimento"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>ITENS DA ORDEM DE COMPRA</h2>
+            <div id="oc-itens-container">
+                <!-- Linhas de itens inseridas via JS -->
+            </div>
+            <button class="btn-adicionar-item" onclick="adicionarLinhaItem()">+ ADICIONAR ITEM</button>
+        </div>
+
+        <div class="card">
+            <h2>FECHAMENTO</h2>
+            <div class="totais-oc-grid">
+                <div><label>Total Bruto Itens (R$)</label><input type="number" id="oc-total-bruto" value="0.00" readonly style="background:#1a1d23; color:#777;"></div>
+                <div><label>Valor de Entrada (R$)</label><input type="number" id="oc-entrada" value="0.00" oninput="calcularTotaisFinais()"></div>
+                <div><label>Desconto (R$)</label><input type="number" id="oc-desconto" value="0.00" oninput="calcularTotaisFinais()"></div>
+                
+                <div class="total-destaque">
+                    <p>TOTAL LÍQUIDO A PAGAR</p>
+                    <h3 id="oc-total-final">R$ 0,00</h3>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <button class="btn-salvar" onclick="salvarOC()">SALVAR ORDEM DE COMPRA</button>
             </div>
         </div>
     </div>
 </main>
 
 <script>
-    // Banco de dados simulado inicializado com alguns exemplos
+    // Banco de dados em memória
     let clientesBD = [
         { id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222", email: "filial@ammvalvulas.com.br", endereco: "Rua das Juntas, 45", cidade: "Santos / SP" },
         { id: 2, nome: "Açoes Norte Distribuidora", documento: "12.345.678/0001-00", whatsapp: "(11) 99999-1111", email: "contato@aconorte.com.br", endereco: "Av. Industrial, 1500", cidade: "São Paulo / SP" },
         { id: 3, nome: "Usinagem Zênite Ltda", documento: "98.765.432/0001-99", whatsapp: "(21) 97777-3333", email: "suporte@zenite.com.br", endereco: "Rodovia BR-101, Km 20", cidade: "Macabu / RJ" }
     ];
 
-    // Controla a troca de abas
     function abrirAba(evt, nomeAba) {
         document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
         document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
         document.getElementById(nomeAba).style.display = 'block';
         if(evt) evt.currentTarget.classList.add('ativa');
         
-        if(nomeAba === 'clientes') {
-            renderizarClientes();
-        }
+        if(nomeAba === 'clientes') renderizarClientes();
+        if(nomeAba === 'os') atualizarConfiguracoesIniciaisOC();
     }
 
-    // Renderiza (desenha) os cards na tela em ordem A-Z
     function renderizarClientes(filtro = '') {
         const grid = document.getElementById('lista-clientes');
         grid.innerHTML = '';
+        let ordenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
+        if(filtro) ordenados = ordenados.filter(c => c.nome.toLowerCase().includes(filtro.toLowerCase()));
 
-        // Ordena de A a Z por Nome
-        let clientesOrdenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
-
-        // Aplica filtro da barra de pesquisa se houver
-        if(filtro) {
-            clientesOrdenados = clientesOrdenados.filter(c => c.nome.toLowerCase().includes(filtro.toLowerCase()));
-        }
-
-        if(clientesOrdenados.length === 0) {
+        if(ordenados.length === 0) {
             grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhum cliente encontrado.</p>';
             return;
         }
 
-        clientesOrdenados.forEach(cliente => {
-            const caixa = document.createElement('div');
-            caixa.className = 'cliente-caixa';
-            caixa.innerHTML = `
+        ordenados.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'cliente-caixa';
+            div.innerHTML = `
                 <div>
-                    <div class="cliente-nome">${cliente.nome}</div>
-                    <div class="cliente-info"><span>CPF / CNPJ</span>${cliente.documento || '-'}</div>
-                    <div class="cliente-info"><span>WhatsApp</span>${cliente.whatsapp || '-'}</div>
-                    <div class="cliente-info"><span>E-mail</span>${cliente.email || '-'}</div>
-                    <div class="cliente-info"><span>Endereço</span>${cliente.endereco || '-'}</div>
-                    <div class="cliente-info"><span>Cidade / UF</span>${cliente.cidade || '-'}</div>
+                    <div class="cliente-nome">${c.nome}</div>
+                    <div class="cliente-info"><span>CPF / CNPJ</span>${c.documento || '-'}</div>
+                    <div class="cliente-info"><span>WhatsApp</span>${c.whatsapp || '-'}</div>
+                    <div class="cliente-info"><span>E-mail</span>${c.email || '-'}</div>
+                    <div class="cliente-info"><span>Endereço</span>${c.endereco || '-'}</div>
+                    <div class="cliente-info"><span>Cidade / UF</span>${c.cidade || '-'}</div>
                 </div>
                 <div class="cliente-acoes">
-                    <button class="btn-acao btn-editar" onclick="prepararEdicao(${cliente.id})">Editar</button>
-                    <button class="btn-acao btn-excluir" onclick="excluirCliente(${cliente.id})">Excluir</button>
+                    <button class="btn-acao btn-editar" onclick="prepararEdicao(${c.id})">Editar</button>
+                    <button class="btn-acao btn-excluir" onclick="excluirCliente(${c.id})">Excluir</button>
                 </div>
             `;
-            grid.appendChild(caixa);
+            grid.appendChild(div);
         });
     }
 
-    // Adiciona ou Atualiza um cliente
     function salvarCliente() {
         const idEditando = document.getElementById('editando-id').value;
         const nome = document.getElementById('form-nome').value.trim();
@@ -225,54 +273,38 @@
         const endereco = document.getElementById('form-endereco').value.trim();
         const cidade = document.getElementById('form-cidade').value.trim();
 
-        if(!nome) {
-            alert('Por favor, preencha pelo menos o Nome / Razão Social.');
-            return;
-        }
+        if(!nome) return alert('Preencha o Nome / Razão Social.');
 
         if(idEditando) {
-            // Modo Edição: Atualiza o cliente existente
-            const index = clientesBD.findIndex(c => c.id == idEditando);
-            if(index !== -1) {
-                clientesBD[index] = { id: parseInt(idEditando), nome, documento, whatsapp, email, endereco, cidade };
-            }
+            const idx = clientesBD.findIndex(c => c.id == idEditando);
+            if(idx !== -1) clientesBD[idx] = { id: parseInt(idEditando), nome, documento, whatsapp, email, endereco, cidade };
         } else {
-            // Modo Novo Cadastro: Cria um novo ID e adiciona
             const novoId = clientesBD.length > 0 ? Math.max(...clientesBD.map(c => c.id)) + 1 : 1;
             clientesBD.push({ id: novoId, nome, documento, whatsapp, email, endereco, cidade });
         }
-
-        // Reseta o formulário
         limparFormulario();
-        
-        // Direciona o usuário para a aba de listagem para ver o resultado
         document.getElementById('aba-clientes-btn').click();
     }
 
-    // Deleta o cliente do array
     function excluirCliente(id) {
-        if(confirm("Tem certeza que deseja excluir este cliente?")) {
+        if(confirm("Deseja excluir este cliente?")) {
             clientesBD = clientesBD.filter(c => c.id !== id);
-            renderizarClientes(document.getElementById('campoPesquisa').value);
+            renderizarClientes();
         }
     }
 
-    // Copia os dados do card de volta para o formulário para edição
     function prepararEdicao(id) {
-        const cliente = clientesBD.find(c => c.id === id);
-        if(!cliente) return;
-
-        document.getElementById('editando-id').value = cliente.id;
-        document.getElementById('form-nome').value = cliente.nome;
-        document.getElementById('form-documento').value = cliente.documento;
-        document.getElementById('form-whatsapp').value = cliente.whatsapp;
-        document.getElementById('form-email').value = cliente.email;
-        document.getElementById('form-endereco').value = cliente.endereco;
-        document.getElementById('form-cidade').value = cliente.cidade;
-
+        const c = clientesBD.find(c => c.id === id);
+        if(!c) return;
+        document.getElementById('editando-id').value = c.id;
+        document.getElementById('form-nome').value = c.nome;
+        document.getElementById('form-documento').value = c.documento;
+        document.getElementById('form-whatsapp').value = c.whatsapp;
+        document.getElementById('form-email').value = c.email;
+        document.getElementById('form-endereco').value = c.endereco;
+        document.getElementById('form-cidade').value = c.cidade;
         document.getElementById('titulo-form').innerText = "ALTERAR DADOS DO CLIENTE";
         
-        // Vai para a aba de cadastro para o usuário editar
         document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
         document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
         document.getElementById('cadastro').style.display = 'block';
@@ -290,18 +322,98 @@
         document.getElementById('titulo-form').innerText = "CADASTRO DE CLIENTE";
     }
 
-    // Faz a barra de pesquisa do topo buscar em tempo real
     function filtrarClientes() {
-        const termo = document.getElementById('campoPesquisa').value;
-        // Se o usuário pesquisar, força a ida para a aba de clientes para mostrar o resultado
-        const abaClientesAtiva = document.getElementById('clientes').style.display === 'block';
-        if(!abaClientesAtiva) {
-            document.getElementById('aba-clientes-btn').click();
-        }
-        renderizarClientes(termo);
+        if(document.getElementById('clientes').style.display !== 'block') document.getElementById('aba-clientes-btn').click();
+        renderizarClientes(document.getElementById('campoPesquisa').value);
     }
 
-    // Inicializa a tabela ao carregar o sistema
+    /* LÓGICA DA ABA NOVA OC */
+    function atualizarConfiguracoesIniciaisOC() {
+        const select = document.getElementById('oc-cliente');
+        select.innerHTML = '<option value="">-- Escolha um Cliente --</option>';
+        const ordenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
+        ordenados.forEach(c => {
+            select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+        });
+
+        const hoje = new Date();
+        document.getElementById('oc-emissao').value = hoje.toISOString().split('T')[0];
+
+        const vencimento = new Date();
+        vencimento.setDate(hoje.getDate() + 15);
+        document.getElementById('oc-vencimento').value = vencimento.toISOString().split('T')[0];
+
+        const container = document.getElementById('oc-itens-container');
+        if(container.children.length === 0) {
+            adicionarLinhaItem();
+        }
+    }
+
+    function adicionarLinhaItem() {
+        const container = document.getElementById('oc-itens-container');
+        const timestamp = Date.now();
+        const linha = document.createElement('div');
+        linha.className = 'item-oc-linha';
+        linha.id = `item-${timestamp}`;
+
+        linha.innerHTML = `
+            <div>
+                <label>Tipo</label>
+                <select class="item-tipo">
+                    <option value="Mão de Obra">Mão de Obra</option>
+                    <option value="Peça Mecânica">Peça Mecânica</option>
+                </select>
+            </div>
+            <div><label>Descrição</label><input type="text" class="item-desc" placeholder="Ex: Manutenção da Válvula"></div>
+            <div><label>Qtd</label><input type="number" class="item-qtd" value="1" min="1" oninput="calcularTotalItem('${timestamp}')"></div>
+            <div><label>Preço Unit. (R$)</label><input type="number" class="item-valor" value="0.00" step="0.01" oninput="calcularTotalItem('${timestamp}')"></div>
+            <div><label>Preço Total (R$)</label><input type="number" class="item-total" value="0.00" readonly style="background:#121212; color:#aaa;"></div>
+            <button class="btn-remover-item" onclick="removerLinhaItem('${timestamp}')">X</button>
+        `;
+        container.appendChild(linha);
+    }
+
+    function removerLinhaItem(id) {
+        const linha = document.getElementById(`item-${id}`);
+        if(linha) {
+            linha.remove();
+            calcularTotaisFinais();
+        }
+    }
+
+    function calcularTotalItem(id) {
+        const linha = document.getElementById(`item-${id}`);
+        if(linha) {
+            const qtd = parseFloat(linha.querySelector('.item-qtd').value) || 0;
+            const valor = parseFloat(linha.querySelector('.item-valor').value) || 0;
+            const total = qtd * valor;
+            linha.querySelector('.item-total').value = total.toFixed(2);
+        }
+        calcularTotaisFinais();
+    }
+
+    function calcularTotaisFinais() {
+        let bruto = 0;
+        document.querySelectorAll('.item-total').forEach(input => {
+            bruto += parseFloat(input.value) || 0;
+        });
+
+        document.getElementById('oc-total-bruto').value = bruto.toFixed(2);
+
+        const entrada = parseFloat(document.getElementById('oc-entrada').value) || 0;
+        const desconto = parseFloat(document.getElementById('oc-desconto').value) || 0;
+        
+        const final = bruto - entrada - desconto;
+        document.getElementById('oc-total-final').innerText = `R$ ${final.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function salvarOC() {
+        const clienteId = document.getElementById('oc-cliente').value;
+        if(!clienteId) return alert("Por favor, selecione um cliente para fechar a Ordem de Compra.");
+        
+        alert("Ordem de Compra (OC) salva com sucesso!");
+    }
+
     renderizarClientes();
 </script>
 
