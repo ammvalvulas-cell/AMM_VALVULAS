@@ -8,15 +8,15 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background:#121212; color:white; }
 
-        /* HEADER E PESQUISA */
+        /* HEADER */
         header { background:#1a1d23; padding: 20px; border-bottom: 2px solid #24272c; }
         .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
         
         .logo-area { display: flex; flex-direction: column; gap: 2px; }
-        .logo-area h1 { font-size: 22px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-area h1 { font-size: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .logo-area p { font-size: 13px; color: #4da3ff; font-weight: bold; }
         
-        .pesquisa-area { width: 100%; max-width: 400px; }
+        .pesquisa-area { width: 400px; }
         .pesquisa-area input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
 
         /* ABAS */
@@ -29,13 +29,22 @@
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
         .card { background:#1a1d23; padding:25px; border-radius:10px; border: 1px solid #333; }
-        h2 { color: #fff; margin-bottom: 20px; font-size: 18px; }
+        h2 { color: #2196f3; font-size: 16px; margin-bottom: 20px; border-left: 4px solid #2196f3; padding-left: 10px; }
 
-        /* RESPONSIVIDADE (CELULAR) */
+        /* FORMULÁRIO */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #121212; color: #fff; }
+        .full { grid-column: span 2; }
+        .btn-salvar { width: 100%; padding: 15px; background: #2196f3; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* RESPONSIVIDADE CELULAR */
         @media (max-width: 768px) {
             .topo { flex-direction: column; align-items: center; text-align: center; }
-            .logo-area { align-items: center; margin-bottom: 10px; }
-            .abas { justify-content: flex-start; }
+            .pesquisa-area { width: 100%; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full { grid-column: span 1; }
         }
     </style>
 </head>
@@ -63,12 +72,26 @@
 </div>
 
 <main>
-    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro de Cliente</h2><p>Conteúdo da aba Cadastro...</p></div></div>
-    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2><p>Conteúdo da aba Clientes...</p></div></div>
-    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2><p>Conteúdo da aba Nova OC...</p></div></div>
-    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2><p>Conteúdo da aba Histórico...</p></div></div>
-    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2><p>Conteúdo da aba Financeiro...</p></div></div>
-    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2><p>Conteúdo da aba Devedores...</p></div></div>
+    <div id="cadastro" class="conteudo-aba ativo">
+        <div class="card">
+            <h2>CADASTRO DE CLIENTE</h2>
+            <div class="form-grid">
+                <div class="full"><label>Nome / Razão Social</label><input type="text"></div>
+                <div><label>CPF / CNPJ</label><input type="text"></div>
+                <div><label>WhatsApp</label><input type="text"></div>
+                <div class="full"><label>E-mail</label><input type="email"></div>
+                <div class="full"><label>Endereço Completo</label><input type="text"></div>
+                <div class="full"><label>Cidade / UF</label><input type="text"></div>
+            </div>
+            <button class="btn-salvar">SALVAR CLIENTE</button>
+        </div>
+    </div>
+
+    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2></div></div>
+    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2></div></div>
+    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2></div></div>
+    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2></div></div>
+    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2></div></div>
 </main>
 
 <script>
