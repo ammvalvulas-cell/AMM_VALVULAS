@@ -11,11 +11,11 @@
         /* HEADER E PESQUISA */
         header { background:#1a1d23; padding: 15px; border-bottom: 2px solid #24272c; }
         .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
-        
+
         .logo-area { display: flex; flex-direction: column; }
         .logo-area h1 { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .logo-area p { font-size: 12px; color: #4da3ff; font-weight: bold; }
-        
+
         .pesquisa-area { width: 100%; max-width: 300px; }
         .pesquisa-area input { 
             width: 100%; padding: 10px 20px; border-radius: 25px; 
@@ -46,11 +46,11 @@
         .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
 
         /* CONTEÚDO E FORMULÁRIO COMPACTO */
-        main { padding: 15px; max-width: 800px; margin: 0 auto; }
+        main { padding: 15px; max-width: 1200px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
         .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; }
-        h2 { color: #2196f3; font-size: 14px; margin-bottom: 12px; border-left: 3px solid #2196f3; padding-left: 8px; }
+        h2 { color: #2196f3; font-size: 14px; margin-bottom: 15px; border-left: 3px solid #2196f3; padding-left: 8px; }
 
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
         label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; }
@@ -64,11 +64,39 @@
             background: linear-gradient(90deg, #2196f3, #1565c0);
         }
 
+        /* SISTEMA DE CAIXAS (CARDS) PARA OS CLIENTES */
+        .clientes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        
+        .cliente-caixa { 
+            background: #15181c; border: 1px solid #2d3139; 
+            border-radius: 12px; padding: 15px; display: flex; 
+            flex-direction: column; justify-content: space-between; 
+            transition: 0.2s;
+        }
+        .cliente-caixa:hover { border-color: #2196f3; }
+        
+        .cliente-nome { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 10px; border-bottom: 1px solid #2d3139; padding-bottom: 5px; }
+        
+        .cliente-info { font-size: 12px; color: #aaa; margin-bottom: 6px; display: flex; flex-direction: column; }
+        .cliente-info span { color: #777; font-size: 10px; text-transform: uppercase; font-weight: bold; }
+
+        /* AÇÕES DENTRO DA CAIXA */
+        .cliente-acoes { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #2d3139; padding-top: 10px; }
+        .btn-acao { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+        .btn-editar { background: #ff9800; color: #fff; }
+        .btn-editar:hover { background: #e68a00; }
+        .btn-excluir { background: #f44336; color: #fff; }
+        .btn-excluir:hover { background: #d32f2f; }
+
         /* RESPONSIVIDADE */
         @media (min-width: 600px) {
             .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .full { grid-column: span 2; }
-            .abas { justify-content: center; } /* Centraliza no PC */
+            .abas { justify-content: center; }
+            .clientes-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .clientes-grid { grid-template-columns: repeat(3, 1fr); }
         }
         @media (max-width: 600px) {
             .topo { flex-direction: column; align-items: center; text-align: center; }
@@ -85,14 +113,14 @@
             <p>CNPJ: 62.125.027/0001-68</p>
         </div>
         <div class="pesquisa-area">
-            <input type="text" placeholder="Pesquisar...">
+            <input type="text" id="campoPesquisa" placeholder="Pesquisar cliente..." oninput="filtrarClientes()">
         </div>
     </div>
 </header>
 
 <div class="abas">
-    <button class="btn-aba ativa" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
+    <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
+    <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
     <button class="btn-aba" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
     <button class="btn-aba" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
     <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
@@ -100,29 +128,181 @@
 </div>
 
 <main>
+    <!-- ABA 1: CADASTRO -->
     <div id="cadastro" class="conteudo-aba ativo">
-        <div class="card">
-            <h2>CADASTRO DE CLIENTE</h2>
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2 id="titulo-form">CADASTRO DE CLIENTE</h2>
+            <input type="hidden" id="editando-id" value="">
             <div class="form-grid">
-                <div class="full"><label>Nome / Razão Social</label><input type="text"></div>
-                <div><label>CPF / CNPJ</label><input type="text"></div>
-                <div><label>WhatsApp</label><input type="text"></div>
-                <div class="full"><label>E-mail</label><input type="email"></div>
-                <div class="full"><label>Endereço Completo</label><input type="text"></div>
-                <div class="full"><label>Cidade / UF</label><input type="text"></div>
+                <div class="full"><label>Nome / Razão Social</label><input type="text" id="form-nome"></div>
+                <div><label>CPF / CNPJ</label><input type="text" id="form-documento"></div>
+                <div><label>WhatsApp</label><input type="text" id="form-whatsapp"></div>
+                <div class="full"><label>E-mail</label><input type="email" id="form-email"></div>
+                <div class="full"><label>Endereço Completo</label><input type="text" id="form-endereco"></div>
+                <div class="full"><label>Cidade / UF</label><input type="text" id="form-cidade"></div>
             </div>
-            <button class="btn-salvar">SALVAR CLIENTE</button>
+            <button class="btn-salvar" onclick="salvarCliente()">SALVAR CLIENTE</button>
         </div>
     </div>
-    </main>
+
+    <!-- ABA 2: CLIENTES -->
+    <div id="clientes" class="conteudo-aba">
+        <div class="card">
+            <h2>CLIENTES CADASTRADOS (A-Z)</h2>
+            <div class="clientes-grid" id="lista-clientes">
+                <!-- As caixas de clientes vão aparecer aqui via Javascript -->
+            </div>
+        </div>
+    </div>
+</main>
 
 <script>
+    // Banco de dados simulado inicializado com alguns exemplos
+    let clientesBD = [
+        { id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222", email: "filial@ammvalvulas.com.br", endereco: "Rua das Juntas, 45", cidade: "Santos / SP" },
+        { id: 2, nome: "Açoes Norte Distribuidora", documento: "12.345.678/0001-00", whatsapp: "(11) 99999-1111", email: "contato@aconorte.com.br", endereco: "Av. Industrial, 1500", cidade: "São Paulo / SP" },
+        { id: 3, nome: "Usinagem Zênite Ltda", documento: "98.765.432/0001-99", whatsapp: "(21) 97777-3333", email: "suporte@zenite.com.br", endereco: "Rodovia BR-101, Km 20", cidade: "Macabu / RJ" }
+    ];
+
+    // Controla a troca de abas
     function abrirAba(evt, nomeAba) {
         document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
         document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
         document.getElementById(nomeAba).style.display = 'block';
-        evt.currentTarget.classList.add('ativa');
+        if(evt) evt.currentTarget.classList.add('ativa');
+        
+        if(nomeAba === 'clientes') {
+            renderizarClientes();
+        }
     }
+
+    // Renderiza (desenha) os cards na tela em ordem A-Z
+    function renderizarClientes(filtro = '') {
+        const grid = document.getElementById('lista-clientes');
+        grid.innerHTML = '';
+
+        // Ordena de A a Z por Nome
+        let clientesOrdenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
+
+        // Aplica filtro da barra de pesquisa se houver
+        if(filtro) {
+            clientesOrdenados = clientesOrdenados.filter(c => c.nome.toLowerCase().includes(filtro.toLowerCase()));
+        }
+
+        if(clientesOrdenados.length === 0) {
+            grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhum cliente encontrado.</p>';
+            return;
+        }
+
+        clientesOrdenados.forEach(cliente => {
+            const caixa = document.createElement('div');
+            caixa.className = 'cliente-caixa';
+            caixa.innerHTML = `
+                <div>
+                    <div class="cliente-nome">${cliente.nome}</div>
+                    <div class="cliente-info"><span>CPF / CNPJ</span>${cliente.documento || '-'}</div>
+                    <div class="cliente-info"><span>WhatsApp</span>${cliente.whatsapp || '-'}</div>
+                    <div class="cliente-info"><span>E-mail</span>${cliente.email || '-'}</div>
+                    <div class="cliente-info"><span>Endereço</span>${cliente.endereco || '-'}</div>
+                    <div class="cliente-info"><span>Cidade / UF</span>${cliente.cidade || '-'}</div>
+                </div>
+                <div class="cliente-acoes">
+                    <button class="btn-acao btn-editar" onclick="prepararEdicao(${cliente.id})">Editar</button>
+                    <button class="btn-acao btn-excluir" onclick="excluirCliente(${cliente.id})">Excluir</button>
+                </div>
+            `;
+            grid.appendChild(caixa);
+        });
+    }
+
+    // Adiciona ou Atualiza um cliente
+    function salvarCliente() {
+        const idEditando = document.getElementById('editando-id').value;
+        const nome = document.getElementById('form-nome').value.trim();
+        const documento = document.getElementById('form-documento').value.trim();
+        const whatsapp = document.getElementById('form-whatsapp').value.trim();
+        const email = document.getElementById('form-email').value.trim();
+        const endereco = document.getElementById('form-endereco').value.trim();
+        const cidade = document.getElementById('form-cidade').value.trim();
+
+        if(!nome) {
+            alert('Por favor, preencha pelo menos o Nome / Razão Social.');
+            return;
+        }
+
+        if(idEditando) {
+            // Modo Edição: Atualiza o cliente existente
+            const index = clientesBD.findIndex(c => c.id == idEditando);
+            if(index !== -1) {
+                clientesBD[index] = { id: parseInt(idEditando), nome, documento, whatsapp, email, endereco, cidade };
+            }
+        } else {
+            // Modo Novo Cadastro: Cria um novo ID e adiciona
+            const novoId = clientesBD.length > 0 ? Math.max(...clientesBD.map(c => c.id)) + 1 : 1;
+            clientesBD.push({ id: novoId, nome, documento, whatsapp, email, endereco, cidade });
+        }
+
+        // Reseta o formulário
+        limparFormulario();
+        
+        // Direciona o usuário para a aba de listagem para ver o resultado
+        document.getElementById('aba-clientes-btn').click();
+    }
+
+    // Deleta o cliente do array
+    function excluirCliente(id) {
+        if(confirm("Tem certeza que deseja excluir este cliente?")) {
+            clientesBD = clientesBD.filter(c => c.id !== id);
+            renderizarClientes(document.getElementById('campoPesquisa').value);
+        }
+    }
+
+    // Copia os dados do card de volta para o formulário para edição
+    function prepararEdicao(id) {
+        const cliente = clientesBD.find(c => c.id === id);
+        if(!cliente) return;
+
+        document.getElementById('editando-id').value = cliente.id;
+        document.getElementById('form-nome').value = cliente.nome;
+        document.getElementById('form-documento').value = cliente.documento;
+        document.getElementById('form-whatsapp').value = cliente.whatsapp;
+        document.getElementById('form-email').value = cliente.email;
+        document.getElementById('form-endereco').value = cliente.endereco;
+        document.getElementById('form-cidade').value = cliente.cidade;
+
+        document.getElementById('titulo-form').innerText = "ALTERAR DADOS DO CLIENTE";
+        
+        // Vai para a aba de cadastro para o usuário editar
+        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
+        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
+        document.getElementById('cadastro').style.display = 'block';
+        document.getElementById('aba-cadastro-btn').classList.add('ativa');
+    }
+
+    function limparFormulario() {
+        document.getElementById('editando-id').value = '';
+        document.getElementById('form-nome').value = '';
+        document.getElementById('form-documento').value = '';
+        document.getElementById('form-whatsapp').value = '';
+        document.getElementById('form-email').value = '';
+        document.getElementById('form-endereco').value = '';
+        document.getElementById('form-cidade').value = '';
+        document.getElementById('titulo-form').innerText = "CADASTRO DE CLIENTE";
+    }
+
+    // Faz a barra de pesquisa do topo buscar em tempo real
+    function filtrarClientes() {
+        const termo = document.getElementById('campoPesquisa').value;
+        // Se o usuário pesquisar, força a ida para a aba de clientes para mostrar o resultado
+        const abaClientesAtiva = document.getElementById('clientes').style.display === 'block';
+        if(!abaClientesAtiva) {
+            document.getElementById('aba-clientes-btn').click();
+        }
+        renderizarClientes(termo);
+    }
+
+    // Inicializa a tabela ao carregar o sistema
+    renderizarClientes();
 </script>
 
 </body>
