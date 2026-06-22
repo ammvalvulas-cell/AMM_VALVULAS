@@ -25,19 +25,33 @@
         }
         .pesquisa-area input:focus { border-color: #4da3ff; box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
 
-        /* ABAS */
-        .abas { background:#1a1d23; display:flex; overflow-x:auto; border-bottom: 1px solid #333; justify-content: center; padding: 10px 0; }
-        .abas button { background:none; border:none; color:#777; padding:8px 15px; cursor:pointer; white-space:nowrap; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        /* ABAS - AJUSTADAS PARA DESLIZAR NO CELULAR */
+        .abas { 
+            background:#1a1d23; 
+            display:flex; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid #333; 
+            justify-content: flex-start; 
+            padding: 10px 5px; 
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .abas::-webkit-scrollbar { display: none; }
+        .abas button { 
+            background:none; border:none; color:#777; padding: 10px 12px; 
+            cursor:pointer; font-weight: bold; text-transform: uppercase; 
+            font-size: 11px; flex-shrink: 0;
+        }
         .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
 
-        /* CONTEÚDO E CARD COMPACTO */
+        /* CONTEÚDO E FORMULÁRIO COMPACTO */
         main { padding: 15px; max-width: 800px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
         .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; }
         h2 { color: #2196f3; font-size: 14px; margin-bottom: 12px; border-left: 3px solid #2196f3; padding-left: 8px; }
 
-        /* FORMULÁRIO COMPACTO */
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
         label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; }
         input { 
@@ -54,6 +68,7 @@
         @media (min-width: 600px) {
             .form-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             .full { grid-column: span 2; }
+            .abas { justify-content: center; } /* Centraliza no PC */
         }
         @media (max-width: 600px) {
             .topo { flex-direction: column; align-items: center; text-align: center; }
@@ -99,13 +114,7 @@
             <button class="btn-salvar">SALVAR CLIENTE</button>
         </div>
     </div>
-
-    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2></div></div>
-    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2></div></div>
-    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2></div></div>
-    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2></div></div>
-    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2></div></div>
-</main>
+    </main>
 
 <script>
     function abrirAba(evt, nomeAba) {
