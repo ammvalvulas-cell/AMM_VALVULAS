@@ -5,30 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMM VÁLVULAS - Sistema</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
-        body { background:#1d1f23; color:white; padding-bottom: 50px; }
-        
-        /* Cabeçalho Ajustado */
-        header { background:#24272c; padding:20px; border-bottom: 1px solid #32353b; }
-        .topo { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-        
-        .logo-area { display: flex; align-items: baseline; gap: 15px; }
-        .logo-area h1 { font-size: 20px; color: #fff; }
-        .logo-area p { font-size: 13px; color: #4da3ff; }
-        
-        .pesquisa-area { flex-grow: 1; max-width: 400px; }
-        .pesquisa-area input { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #3a3d44; color: white; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background:#121212; color:white; }
 
-        /* Abas */
-        .abas { background:#24272c; display:flex; overflow-x:auto; border-bottom: 1px solid #32353b; justify-content: center; }
-        .abas button { background:none; border:none; color:#a0a5b0; padding:15px; cursor:pointer; white-space:nowrap; font-size: 14px; }
-        .abas button.ativa { border-bottom:3px solid #2196f3; color: white; font-weight: bold; }
+        /* HEADER E PESQUISA */
+        header { background:#1a1d23; padding: 20px; border-bottom: 2px solid #24272c; }
+        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+        .logo-area { display: flex; flex-direction: column; gap: 2px; }
+        .logo-area h1 { font-size: 22px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-area p { font-size: 13px; color: #4da3ff; font-weight: bold; }
+        .pesquisa-area { width: 100%; max-width: 400px; }
+        .pesquisa-area input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
 
-        main { padding:20px; max-width: 800px; margin: 0 auto; }
+        /* ABAS */
+        .abas { background:#1a1d23; display:flex; overflow-x:auto; border-bottom: 1px solid #333; justify-content: center; padding: 10px 0; }
+        .abas button { background:none; border:none; color:#777; padding:10px 15px; cursor:pointer; white-space:nowrap; font-weight: bold; text-transform: uppercase; font-size: 13px; }
+        .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
+
+        /* CONTEÚDO */
+        main { padding:20px; max-width: 1000px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
-        .card { background:#2b2e34; padding:20px; border-radius:15px; margin-bottom: 20px; }
-        h2 { color: #4da3ff; margin-bottom: 15px; border-bottom: 1px solid #3a3d44; padding-bottom: 10px; }
+        .card { background:#1a1d23; padding:25px; border-radius:10px; border: 1px solid #333; }
+        h2 { color: #fff; margin-bottom: 20px; font-size: 18px; }
+
+        /* RESPONSIVIDADE CELULAR */
+        @media (max-width: 600px) {
+            .topo { justify-content: center; text-align: center; }
+            .abas { justify-content: flex-start; }
+        }
     </style>
 </head>
 <body>
@@ -40,24 +45,24 @@
             <p>CNPJ: 62.125.027/0001-68</p>
         </div>
         <div class="pesquisa-area">
-            <input type="text" placeholder="Pesquisar por Nome ou Placa...">
+            <input type="text" placeholder="Pesquisar por nome ou placa...">
         </div>
     </div>
 </header>
 
 <div class="abas">
-    <button class="btn-aba ativa" onclick="abrirAba(event, 'cadastro')">Cadastro</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'clientes')">Clientes</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'os')">Nova OS</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'historico')">Histórico</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">Financeiro</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'devedores')">Devedores</button>
+    <button class="btn-aba ativa" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'devedores')">6. DEVEDORES</button>
 </div>
 
 <main>
-    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro</h2></div></div>
-    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Clientes</h2></div></div>
-    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova OS</h2></div></div>
+    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro de Cliente</h2><p>Formulário aqui...</p></div></div>
+    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2></div></div>
+    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2></div></div>
     <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2></div></div>
     <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2></div></div>
     <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2></div></div>
