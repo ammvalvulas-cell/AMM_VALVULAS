@@ -11,9 +11,11 @@
         /* HEADER E PESQUISA */
         header { background:#1a1d23; padding: 20px; border-bottom: 2px solid #24272c; }
         .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+        
         .logo-area { display: flex; flex-direction: column; gap: 2px; }
         .logo-area h1 { font-size: 22px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .logo-area p { font-size: 13px; color: #4da3ff; font-weight: bold; }
+        
         .pesquisa-area { width: 100%; max-width: 400px; }
         .pesquisa-area input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #333; background: #000; color: #fff; }
 
@@ -29,9 +31,10 @@
         .card { background:#1a1d23; padding:25px; border-radius:10px; border: 1px solid #333; }
         h2 { color: #fff; margin-bottom: 20px; font-size: 18px; }
 
-        /* RESPONSIVIDADE CELULAR */
-        @media (max-width: 600px) {
-            .topo { justify-content: center; text-align: center; }
+        /* RESPONSIVIDADE (CELULAR) */
+        @media (max-width: 768px) {
+            .topo { flex-direction: column; align-items: center; text-align: center; }
+            .logo-area { align-items: center; margin-bottom: 10px; }
             .abas { justify-content: flex-start; }
         }
     </style>
@@ -60,12 +63,12 @@
 </div>
 
 <main>
-    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro de Cliente</h2><p>Formulário aqui...</p></div></div>
-    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2></div></div>
-    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2></div></div>
-    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2></div></div>
-    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2></div></div>
-    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2></div></div>
+    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro de Cliente</h2><p>Conteúdo da aba Cadastro...</p></div></div>
+    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Lista de Clientes</h2><p>Conteúdo da aba Clientes...</p></div></div>
+    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova Ordem de Serviço</h2><p>Conteúdo da aba Nova OC...</p></div></div>
+    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2><p>Conteúdo da aba Histórico...</p></div></div>
+    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2><p>Conteúdo da aba Financeiro...</p></div></div>
+    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2><p>Conteúdo da aba Devedores...</p></div></div>
 </main>
 
 <script>
