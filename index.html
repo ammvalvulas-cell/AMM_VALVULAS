@@ -8,165 +8,68 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
         body { background:#1d1f23; color:white; padding-bottom: 50px; }
         
-        /* Layout Responsivo */
-        header { background:#24272c; padding:15px; }
-        .topo { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; max-width: 1000px; margin: 0 auto; }
-        .empresa h1 { font-size:18px; }
-        .empresa p { font-size:12px; color:#4da3ff; }
+        /* Cabeçalho Ajustado */
+        header { background:#24272c; padding:20px; border-bottom: 1px solid #32353b; }
+        .topo { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
         
+        .logo-area { display: flex; align-items: baseline; gap: 15px; }
+        .logo-area h1 { font-size: 20px; color: #fff; }
+        .logo-area p { font-size: 13px; color: #4da3ff; }
+        
+        .pesquisa-area { flex-grow: 1; max-width: 400px; }
+        .pesquisa-area input { width: 100%; padding: 10px; border-radius: 8px; border: none; background: #3a3d44; color: white; }
+
+        /* Abas */
         .abas { background:#24272c; display:flex; overflow-x:auto; border-bottom: 1px solid #32353b; justify-content: center; }
-        .abas button { background:none; border:none; color:#a0a5b0; padding:15px; cursor:pointer; white-space:nowrap; }
+        .abas button { background:none; border:none; color:#a0a5b0; padding:15px; cursor:pointer; white-space:nowrap; font-size: 14px; }
         .abas button.ativa { border-bottom:3px solid #2196f3; color: white; font-weight: bold; }
 
         main { padding:20px; max-width: 800px; margin: 0 auto; }
         .conteudo-aba { display: none; }
         .conteudo-aba.ativo { display: block; }
-
         .card { background:#2b2e34; padding:20px; border-radius:15px; margin-bottom: 20px; }
         h2 { color: #4da3ff; margin-bottom: 15px; border-bottom: 1px solid #3a3d44; padding-bottom: 10px; }
-
-        input, select, textarea { width:100%; padding:12px; margin-bottom:10px; border:none; border-radius:8px; background:#3a3d44; color:white; }
-        
-        button { cursor: pointer; border:none; border-radius:8px; padding:12px; font-weight:bold; transition: 0.2s; }
-        .salvar, .btn-pdf { width: 100%; background: #2196f3; color: white; margin-top: 10px; }
-        .btn-add { background: #4caf50; color: white; padding: 8px 15px; }
-        .btn-excluir { background: #f44336; color: white; padding: 5px 10px; }
-
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-        .tabela-container { overflow-x: auto; margin-top: 10px; }
-        .tabela-itens { width: 100%; border-collapse: collapse; }
-        .tabela-itens td { padding: 5px; }
-
-        .cliente-box { background: #32353b; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #2196f3; }
-        .cliente-topo { display: flex; justify-content: space-between; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="topo">
-        <div class="empresa">
+        <div class="logo-area">
             <h1>AMM VÁLVULAS</h1>
             <p>CNPJ: 62.125.027/0001-68</p>
+        </div>
+        <div class="pesquisa-area">
+            <input type="text" placeholder="Pesquisar por Nome ou Placa...">
         </div>
     </div>
 </header>
 
 <div class="abas">
-    <button id="aba-cadastro-btn" class="btn-aba" onclick="abrirAba(event, 'cadastro')">Cadastro</button>
-    <button id="aba-clientes-btn" class="btn-aba" onclick="abrirAba(event, 'clientes')">Clientes</button>
-    <button id="aba-os-btn" class="btn-aba ativa" onclick="abrirAba(event, 'os')">O.S.</button>
+    <button class="btn-aba ativa" onclick="abrirAba(event, 'cadastro')">Cadastro</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'clientes')">Clientes</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'os')">Nova OS</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'historico')">Histórico</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">Financeiro</button>
+    <button class="btn-aba" onclick="abrirAba(event, 'devedores')">Devedores</button>
 </div>
 
 <main>
-    <div id="cadastro" class="conteudo-aba">
-        <div class="card">
-            <h2 id="titulo-form">Novo Cliente</h2>
-            <input type="hidden" id="cliente-id">
-            <input type="text" id="nome" placeholder="Nome do Cliente">
-            <input type="text" id="cpf" placeholder="CPF ou CNPJ">
-            <input type="text" id="telefone" placeholder="Telefone">
-            <input type="text" id="cidade" placeholder="Cidade-UF">
-            <button class="salvar" onclick="salvarCliente()">SALVAR</button>
-        </div>
-    </div>
-
-    <div id="clientes" class="conteudo-aba">
-        <div class="card">
-            <h2>Clientes Cadastrados</h2>
-            <div id="container-clientes"></div>
-        </div>
-    </div>
-
-    <div id="os" class="conteudo-aba ativo">
-        <div class="card">
-            <h2>Ordem de Serviço</h2>
-            <select id="os-cliente"></select>
-            <div class="tabela-container">
-                <table class="tabela-itens">
-                    <tbody id="corpo-itens-os"></tbody>
-                </table>
-            </div>
-            <button class="btn-add" onclick="adicionarLinhaItem()">+ Adicionar Item</button>
-            <div id="os-total-geral" style="margin-top:20px; font-size:20px; color:#4caf50;">Total: R$ 0,00</div>
-            <button class="btn-pdf" onclick="alert('Gerando PDF...')">GERAR PDF</button>
-        </div>
-    </div>
+    <div id="cadastro" class="conteudo-aba ativo"><div class="card"><h2>Cadastro</h2></div></div>
+    <div id="clientes" class="conteudo-aba"><div class="card"><h2>Clientes</h2></div></div>
+    <div id="os" class="conteudo-aba"><div class="card"><h2>Nova OS</h2></div></div>
+    <div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2></div></div>
+    <div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2></div></div>
+    <div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2></div></div>
 </main>
 
 <script>
-    let clientesBanco = JSON.parse(localStorage.getItem('clientes')) || [];
-
     function abrirAba(evt, nomeAba) {
         document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
         document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
         document.getElementById(nomeAba).style.display = 'block';
         evt.currentTarget.classList.add('ativa');
     }
-
-    function salvarCliente() {
-        const id = document.getElementById('cliente-id').value;
-        const novo = {
-            id: id ? parseInt(id) : Date.now(),
-            nome: document.getElementById('nome').value,
-            cpf: document.getElementById('cpf').value,
-            telefone: document.getElementById('telefone').value,
-            cidade: document.getElementById('cidade').value
-        };
-        
-        if (id) {
-            clientesBanco = clientesBanco.map(c => c.id == id ? novo : c);
-        } else {
-            clientesBanco.push(novo);
-        }
-        
-        localStorage.setItem('clientes', JSON.stringify(clientesBanco));
-        renderizarClientes();
-        limparFormulario();
-        alert("Salvo com sucesso!");
-    }
-
-    function renderizarClientes() {
-        const container = document.getElementById('container-clientes');
-        container.innerHTML = clientesBanco.map(c => `
-            <div class="cliente-box">
-                <div class="cliente-topo"><h3>${c.nome}</h3></div>
-                <p>Tel: ${c.telefone} | Cidade: ${c.cidade}</p>
-                <button class="btn-excluir" onclick="excluirCliente(${c.id})">Excluir</button>
-            </div>
-        `).join('');
-        
-        // Atualiza Select
-        const sel = document.getElementById('os-cliente');
-        sel.innerHTML = clientesBanco.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-    }
-
-    function excluirCliente(id) {
-        clientesBanco = clientesBanco.filter(c => c.id !== id);
-        localStorage.setItem('clientes', JSON.stringify(clientesBanco));
-        renderizarClientes();
-    }
-
-    function adicionarLinhaItem() {
-        const tbody = document.getElementById('corpo-itens-os');
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><input type="text" placeholder="Item" style="margin-bottom:0"></td>
-            <td><input type="number" value="1" style="width:60px; margin-bottom:0"></td>
-            <td><input type="number" value="0" style="width:80px; margin-bottom:0"></td>
-            <td><button class="btn-excluir" onclick="this.closest('tr').remove()">X</button></td>
-        `;
-        tbody.appendChild(tr);
-    }
-
-    function limparFormulario() {
-        document.getElementById('nome').value = "";
-        document.getElementById('cliente-id').value = "";
-    }
-
-    // Inicialização
-    renderizarClientes();
-    adicionarLinhaItem();
 </script>
 
 </body>
