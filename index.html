@@ -1,771 +1,534 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMM VÁLVULAS - Sistema</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background:#121212; color:white; }
-
-        /* HEADER E PESQUISA */
-        header { background:#1a1d23; padding: 15px; border-bottom: 2px solid #24272c; }
-        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
-
-        .logo-area { display: flex; flex-direction: column; }
-        .logo-area h1 { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .logo-area p { font-size: 12px; color: #4da3ff; font-weight: bold; }
-
-        .pesquisa-area { width: 100%; max-width: 300px; }
-        .pesquisa-area input { 
-            width: 100%; padding: 10px 20px; border-radius: 25px; 
-            border: 2px solid #2196f3; background: #0d0d0d; color: #fff; 
-            font-size: 16px; outline: none; transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.2);
-        }
-        .pesquisa-area input:focus { border-color: #4da3ff; box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
-
-        /* ABAS */
-        .abas { 
-            background:#1a1d23; 
-            display:flex; 
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch;
-            border-bottom: 1px solid #333; 
-            justify-content: flex-start; 
-            padding: 10px 5px; 
-            white-space: nowrap;
-            scrollbar-width: none;
-        }
-        .abas::-webkit-scrollbar { display: none; }
-        .abas button { 
-            background:none; border:none; color:#777; padding: 10px 12px; 
-            cursor:pointer; font-weight: bold; text-transform: uppercase; 
-            font-size: 11px; flex-shrink: 0;
-        }
-        .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
-
-        /* CONTEÚDO GERAL */
-        main { padding: 15px; max-width: 1200px; margin: 0 auto; }
-        .conteudo-aba { display: none; }
-        .conteudo-aba.ativo { display: block; }
-        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        h2 { color: #2196f3; font-size: 14px; margin-bottom: 15px; border-left: 3px solid #2196f3; padding-left: 8px; text-transform: uppercase; }
-
-        /* FORMULÁRIOS */
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; font-weight: bold; text-transform: uppercase; }
-        input, select { 
-            width: 100%; padding: 8px 10px; border-radius: 8px; 
-            border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; outline: none;
-        }
-        input:focus, select:focus { border-color: #2196f3; }
-
-        .btn-salvar { 
-            width: 100%; padding: 12px; border: none; border-radius: 20px; 
-            font-size: 13px; font-weight: bold; cursor: pointer; color: white;
-            background: linear-gradient(90deg, #2196f3, #1565c0);
-        }
-
-        /* CARD DE CLIENTES */
-        .clientes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .cliente-caixa { background: #15181c; border: 1px solid #2d3139; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
-        .cliente-nome { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 10px; border-bottom: 1px solid #2d3139; padding-bottom: 5px; }
-        .cliente-info { font-size: 12px; color: #aaa; margin-bottom: 6px; display: flex; flex-direction: column; }
-        .cliente-info span { color: #777; font-size: 10px; text-transform: uppercase; font-weight: bold; }
-        .cliente-acoes { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #2d3139; padding-top: 10px; }
-        .btn-acao { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
-        /* CARD DE CLIENTES E HISTÓRICO */
-        .clientes-grid, .historico-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .cliente-caixa, .oc-caixa { background: #15181c; border: 1px solid #2d3139; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
-        .cliente-nome, .oc-titulo { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 10px; border-bottom: 1px solid #2d3139; padding-bottom: 5px; }
-        .cliente-info, .oc-info { font-size: 12px; color: #aaa; margin-bottom: 6px; display: flex; flex-direction: column; }
-        .cliente-info span, .oc-info span { color: #2196f3; font-size: 10px; text-transform: uppercase; font-weight: bold; }
-        .cliente-acoes, .oc-acoes { display: flex; gap: 8px; margin-top: 15px; border-top: 1px solid #2d3139; padding-top: 10px; flex-wrap: wrap; }
-        .btn-acao { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; text-transform: uppercase; min-width: 70px; }
-        .btn-editar { background: #ff9800; color: #fff; }
-        .btn-excluir { background: #f44336; color: #fff; }
-        .btn-pdf { background: #009688; color: #fff; }
-
-        /* ITENS DA OC */
-        .item-oc-linha { 
-@@ -92,136 +93,198 @@
-        .total-destaque p { font-size: 11px; color: #2196f3; font-weight: bold; }
-        .total-destaque h3 { font-size: 22px; color: #fff; }
-
-        /* RESPONSIVIDADE */
-        /* AREA DE IMPRESSÃO EXCLUSIVA - ESTRUTURA REQUISITADA */
-        #container-impressao-direta {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; color: #1e293b; z-index: 99999; padding: 30px; overflow-y: auto;
-        }
-        .btn-voltar-sistema { 
-            background: #334155; color: white; border: none; padding: 8px 16px; 
-            border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; 
-            margin-bottom: 20px; text-transform: uppercase;
-        }
-
-        .pdf-wrapper { max-width: 800px; margin: 0 auto; background: #fff; font-size: 12px; color: #1e293b; }
-        
-        /* Cabeçalho solicitado: Nome da empresa e CNPJ embaixo */
-        .pdf-header-empresa { border-bottom: 2px solid #1e293b; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end;}
-        .pdf-header-empresa h1 { font-size: 20px; font-weight: 800; color: #1e293b; margin: 0; line-height: 1.1; }
-        .pdf-header-empresa p { font-size: 12px; color: #475569; margin: 2px 0 0 0; font-weight: 600; }
-        .pdf-num-oc { font-size: 14px; font-weight: 800; color: #0f172a; }
-
-        /* Dados em sequência: Cliente, Placa, KM, Data, Vencimento */
-        .pdf-bloco-cliente { margin-bottom: 10px; }
-        .pdf-bloco-cliente strong { font-size: 9px; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 1px; }
-        .pdf-bloco-cliente span { font-size: 15px; font-weight: 700; color: #0f172a; }
-
-        .pdf-grid-dados { display: flex; gap: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 8px 12px; margin-bottom: 15px; }
-        .pdf-dado-col { flex: 1; }
-        .pdf-dado-col strong { font-size: 9px; color: #64748b; text-transform: uppercase; display: block; }
-        .pdf-dado-col span { font-size: 12px; font-weight: 600; color: #1e293b; }
-
-        /* Tabela: Tipo, Descrição, Qtd, Preço Unitário, Valor Total */
-        .pdf-tabela { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        .pdf-tabela th { background: #1e293b; color: #ffffff; text-align: left; padding: 6px 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
-        .pdf-tabela td { padding: 7px 8px; border-bottom: 1px solid #e2e8f0; font-size: 12px; color: #334155; }
-        .pdf-tabela tr:nth-child(even) { background: #f8fafc; }
-        
-        /* Rodapé: Desconto e Valor Total Embaixo */
-        .pdf-financeiro-rodape { display: flex; justify-content: flex-end; }
-        .pdf-caixa-totais { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 4px; width: 100%; max-width: 260px; }
-        .pdf-caixa-totais p { display: flex; justify-content: space-between; margin: 4px 0; color: #475569; font-size: 11px; }
-        .pdf-caixa-totais p span { color: #1e293b; font-weight: 500; }
-        .pdf-caixa-totais .linha-total-final { border-top: 1px dashed #cbd5e1; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; }
-        .pdf-caixa-totais .linha-total-final text { font-weight: 700; color: #0f172a; text-transform: uppercase; font-size: 11px; }
-        .pdf-caixa-totais .linha-total-final h3 { font-size: 15px; color: #0f172a; font-weight: 800; }
-
-        /* RESPONSIVIDADE DO SISTEMA */
-        @media (min-width: 600px) {
-            .form-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .full { grid-column: span 3; }
-            .meio { grid-column: span 2; }
-            .abas { justify-content: center; }
-            .clientes-grid { grid-template-columns: repeat(2, 1fr); }
-            .clientes-grid, .historico-grid { grid-template-columns: repeat(2, 1fr); }
-            .item-oc-linha { grid-template-columns: 120px 2fr 70px 110px 110px auto; gap: 10px; align-items: end; }
-            .totais-oc-grid { grid-template-columns: repeat(3, 1fr); }
-            .total-destaque { grid-column: span 1; margin-top: 0; display: flex; flex-direction: column; justify-content: center; }
-        }
-        @media (min-width: 900px) {
-            .clientes-grid { grid-template-columns: repeat(3, 1fr); }
-            .clientes-grid, .historico-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .topo { flex-direction: column; align-items: center; text-align: center; }
-            .pesquisa-area { max-width: 100%; }
-        }
-
-        /* REGRAS NATIVAS DE IMPRESSÃO */
-        @media print {
-            body { background: white !important; color: black !important; }
-            .btn-voltar-sistema { display: none !important; }
-            #container-impressao-direta { position: absolute; height: auto; overflow: visible; padding: 0; top:0; left:0; }
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <div class="topo">
-        <div class="logo-area">
-            <h1>AMM VÁLVULAS</h1>
-            <p>CNPJ: 62.125.027/0001-68</p>
-        </div>
-        <div class="pesquisa-area">
-            <input type="text" id="campoPesquisa" placeholder="Pesquisar cliente..." oninput="filtrarClientes()">
-<div id="container-impressao-direta"></div>
-
-<div id="conteudo-principal-sistema">
-    <header>
-        <div class="topo">
-            <div class="logo-area">
-                <h1>AMM VÁLVULAS</h1>
-                <p>CNPJ: 62.125.027/0001-68</p>
-            </div>
-            <div class="pesquisa-area">
-                <input type="text" id="campoPesquisa" placeholder="Pesquisar..." oninput="filtrarClientesGeral()">
-            </div>
-        </div>
-    </header>
-
-    <div class="abas">
-        <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
-        <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
-        <button class="btn-aba" id="aba-os-btn" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
-        <button class="btn-aba" id="aba-historico-btn" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
-        <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
-        <button class="btn-aba" onclick="abrirAba(event, 'devedores')">6. DEVEDORES</button>
-    </div>
-</header>
-
-<div class="abas">
-    <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
-    <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
-    <button class="btn-aba" id="aba-os-btn" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
-    <button class="btn-aba" onclick="abrirAba(event, 'devedores')">6. DEVEDORES</button>
-</div>
-
-<main>
-    <!-- ABA 1: CADASTRO -->
-    <div id="cadastro" class="conteudo-aba ativo">
-        <div class="card" style="max-width: 800px; margin: 0 auto;">
-            <h2 id="titulo-form">CADASTRO DE CLIENTE</h2>
-            <input type="hidden" id="editando-id" value="">
-            <div class="form-grid">
-                <div class="full"><label>Nome / Razão Social</label><input type="text" id="form-nome"></div>
-                <div><label>CPF / CNPJ</label><input type="text" id="form-documento"></div>
-                <div><label>WhatsApp</label><input type="text" id="form-whatsapp"></div>
-                <div class="full"><label>E-mail</label><input type="email" id="form-email"></div>
-                <div class="full"><label>Endereço Completo</label><input type="text" id="form-endereco"></div>
-                <div class="full"><label>Cidade / UF</label><input type="text" id="form-cidade"></div>
-    <main>
-        <div id="cadastro" class="conteudo-aba ativo">
-            <div class="card" style="max-width: 800px; margin: 0 auto;">
-                <h2 id="titulo-form">CADASTRO DE CLIENTE</h2>
-                <input type="hidden" id="editando-id" value="">
-                <div class="form-grid">
-                    <div class="full"><label>Nome / Razão Social</label><input type="text" id="form-nome"></div>
-                    <div><label>CPF / CNPJ</label><input type="text" id="form-documento"></div>
-                    <div><label>WhatsApp</label><input type="text" id="form-whatsapp"></div>
-                    <div class="full"><label>E-mail</label><input type="email" id="form-email"></div>
-                    <div class="full"><label>Endereço Completo</label><input type="text" id="form-endereco"></div>
-                    <div class="full"><label>Cidade / UF</label><input type="text" id="form-cidade"></div>
-                </div>
-                <button class="btn-salvar" onclick="salvarCliente()">SALVAR CLIENTE</button>
-            </div>
-            <button class="btn-salvar" onclick="salvarCliente()">SALVAR CLIENTE</button>
-        </div>
-    </div>
-
-    <!-- ABA 2: CLIENTES -->
-    <div id="clientes" class="conteudo-aba">
-        <div class="card">
-            <h2>CLIENTES CADASTRADOS (A-Z)</h2>
-            <div class="clientes-grid" id="lista-clientes"></div>
-        <div id="clientes" class="conteudo-aba">
-            <div class="card">
-                <h2>CLIENTES CADASTRADOS (A-Z)</h2>
-                <div class="clientes-grid" id="lista-clientes"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ABA 3: NOVA OC -->
-    <div id="os" class="conteudo-aba">
-        <div class="card">
-            <h2>DADOS GERAIS DA ORDEM DE COMPRA (OC)</h2>
-            <div class="form-grid">
-                <div class="meio">
-                    <label>Selecionar Cliente</label>
-                    <select id="oc-cliente">
-                        <option value="">-- Escolha um Cliente --</option>
-                    </select>
-        <div id="os" class="conteudo-aba">
-            <div class="card">
-                <h2>DADOS GERAIS DA ORDEM DE COMPRA (OC)</h2>
-                <input type="hidden" id="oc-editando-id" value="">
-                <div class="form-grid">
-                    <div class="meio">
-                        <label>Selecionar Cliente</label>
-                        <select id="oc-cliente">
-                            <option value="">-- Escolha um Cliente --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Mecânico</label>
-                        <select id="oc-mecanico">
-                            <option value="Abel">Abel</option>
-                            <option value="Igor">Igor</option>
-                        </select>
-                    </div>
-                    <div><label>Placa do Veículo</label><input type="text" id="oc-placa" placeholder="ABC-1234"></div>
-                    <div><label>KM Atual</label><input type="number" id="oc-km" placeholder="0"></div>
-                    <div><label>Data de Emissão</label><input type="date" id="oc-emissao" readonly></div>
-                    <div><label>Data de Vencimento (15d)</label><input type="date" id="oc-vencimento"></div>
-                </div>
-                <div>
-                    <label>Mecânico</label>
-                    <select id="oc-mecanico">
-                        <option value="Abel">Abel</option>
-                        <option value="Igor">Igor</option>
-                    </select>
-                </div>
-                <div><label>Placa do Veículo</label><input type="text" id="oc-placa" placeholder="ABC-1234"></div>
-                <div><label>KM Atual</label><input type="number" id="oc-km" placeholder="0"></div>
-                <div><label>Data de Emissão</label><input type="date" id="oc-emissao" readonly></div>
-                <div><label>Data de Vencimento (15d)</label><input type="date" id="oc-vencimento"></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>ITENS DA ORDEM DE COMPRA</h2>
-            <div id="oc-itens-container">
-                <!-- Linhas de itens inseridas via JS -->
-            <div class="card">
-                <h2>ITENS DA ORDEM DE COMPRA</h2>
-                <div id="oc-itens-container"></div>
-                <button class="btn-adicionar-item" onclick="adicionarLinhaItem()">+ ADICIONAR ITEM</button>
-            </div>
-            <button class="btn-adicionar-item" onclick="adicionarLinhaItem()">+ ADICIONAR ITEM</button>
-        </div>
-
-        <div class="card">
-            <h2>FECHAMENTO</h2>
-            <div class="totais-oc-grid">
-                <div><label>Total Bruto Itens (R$)</label><input type="number" id="oc-total-bruto" value="0.00" readonly style="background:#1a1d23; color:#777;"></div>
-                <div><label>Valor de Entrada (R$)</label><input type="number" id="oc-entrada" value="0.00" oninput="calcularTotaisFinais()"></div>
-                <div><label>Desconto (R$)</label><input type="number" id="oc-desconto" value="0.00" oninput="calcularTotaisFinais()"></div>
-                
-                <div class="total-destaque">
-                    <p>TOTAL LÍQUIDO A PAGAR</p>
-                    <h3 id="oc-total-final">R$ 0,00</h3>
-            <div class="card">
-                <h2>FECHAMENTO</h2>
-                <div class="totais-oc-grid">
-                    <div><label>Total Bruto Itens (R$)</label><input type="number" id="oc-total-bruto" value="0.00" readonly style="background:#1a1d23; color:#777;"></div>
-                    <div><label>Valor de Entrada (R$)</label><input type="number" id="oc-entrada" value="0.00" oninput="calcularTotaisFinais()"></div>
-                    <div><label>Desconto (R$)</label><input type="number" id="oc-desconto" value="0.00" oninput="calcularTotaisFinais()"></div>
-                    
-                    <div class="total-destaque">
-                        <p>TOTAL LÍQUIDO A PAGAR</p>
-                        <h3 id="oc-total-final">R$ 0,00</h3>
-                    </div>
-                </div>
-
-                <div style="margin-top: 15px;">
-                    <button class="btn-salvar" id="btn-salvar-oc" onclick="salvarOC()">SALVAR ORDEM DE COMPRA</button>
-                </div>
-            </div>
-        </div>
-
-            <div style="margin-top: 15px;">
-                <button class="btn-salvar" onclick="salvarOC()">SALVAR ORDEM DE COMPRA</button>
-        <div id="historico" class="conteudo-aba">
-            <div class="card">
-                <h2>HISTÓRICO DE ORDENS DE COMPRA (ORDEM CRONOLÓGICA)</h2>
-                <div class="historico-grid" id="lista-historico"></div>
-            </div>
-        </div>
-    </div>
-</main>
-    </main>
-</div>
-
-<script>
-    // Banco de dados em memória
-    let clientesBD = [
-        { id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222", email: "filial@ammvalvulas.com.br", endereco: "Rua das Juntas, 45", cidade: "Santos / SP" },
-        { id: 2, nome: "Açoes Norte Distribuidora", documento: "12.345.678/0001-00", whatsapp: "(11) 99999-1111", email: "contato@aconorte.com.br", endereco: "Av. Industrial, 1500", cidade: "São Paulo / SP" },
-        { id: 3, nome: "Usinagem Zênite Ltda", documento: "98.765.432/0001-99", whatsapp: "(21) 97777-3333", email: "suporte@zenite.com.br", endereco: "Rodovia BR-101, Km 20", cidade: "Macabu / RJ" }
-    ];
-
-    let historicoOC = [
-        { id: 1, clienteId: 1, clienteNome: "AMM Válvulas Filial", mecanico: "Igor", placa: "ABC-1234", km: "12000", emissao: "2026-05-10", vencimento: "2026-05-25", totalBruto: "250.00", entrada: "0.00", desconto: "0.00", totalLiquido: 250.00, itens: [{ tipo: "Mão de Obra", desc: "Revisão Geral", qtd: 1, valor: "250.00", total: "250.00" }] },
-        { id: 2, clienteId: 2, clienteNome: "Açoes Norte Distribuidora", mecanico: "Abel", placa: "KJG-9A82", km: "84200", emissao: "2026-06-22", vencimento: "2026-07-07", totalBruto: "850.00", entrada: "100.00", desconto: "50.00", totalLiquido: 700.00, itens: [{ tipo: "Peça Mecânica", desc: "Válvula Reguladora", qtd: 2, valor: "425.00", total: "850.00" }] }
-    ];
-
-    function abrirAba(evt, nomeAba) {
-        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
-        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
-@@ -230,6 +293,7 @@
-
-        if(nomeAba === 'clientes') renderizarClientes();
-        if(nomeAba === 'os') atualizarConfiguracoesIniciaisOC();
-        if(nomeAba === 'historico') renderizarHistorico();
-    }
-
-    function renderizarClientes(filtro = '') {
-@@ -242,7 +306,6 @@
-            grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhum cliente encontrado.</p>';
-            return;
-        }
-
-        ordenados.forEach(c => {
-            const div = document.createElement('div');
-            div.className = 'cliente-caixa';
-@@ -252,14 +315,11 @@
-                    <div class="cliente-info"><span>CPF / CNPJ</span>${c.documento || '-'}</div>
-                    <div class="cliente-info"><span>WhatsApp</span>${c.whatsapp || '-'}</div>
-                    <div class="cliente-info"><span>E-mail</span>${c.email || '-'}</div>
-                    <div class="cliente-info"><span>Endereço</span>${c.endereco || '-'}</div>
-                    <div class="cliente-info"><span>Cidade / UF</span>${c.cidade || '-'}</div>
-                </div>
-                <div class="cliente-acoes">
-                    <button class="btn-acao btn-editar" onclick="prepararEdicao(${c.id})">Editar</button>
-                    <button class="btn-acao btn-excluir" onclick="excluirCliente(${c.id})">Excluir</button>
-                </div>
-            `;
-                </div>`;
-            grid.appendChild(div);
-        });
-    }
-@@ -283,7 +343,8 @@
-            clientesBD.push({ id: novoId, nome, documento, whatsapp, email, endereco, cidade });
-        }
-        limparFormulario();
-        document.getElementById('aba-clientes-btn').click();
-        abrirAba(null, 'clientes');
-        document.getElementById('aba-clientes-btn').classList.add('ativa');
-    }
-
-    function excluirCliente(id) {
-@@ -304,10 +365,7 @@
-        document.getElementById('form-endereco').value = c.endereco;
-        document.getElementById('form-cidade').value = c.cidade;
-        document.getElementById('titulo-form').innerText = "ALTERAR DADOS DO CLIENTE";
-        
-        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
-        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
-        document.getElementById('cadastro').style.display = 'block';
-        abrirAba(null, 'cadastro');
-        document.getElementById('aba-cadastro-btn').classList.add('ativa');
-    }
-
-@@ -322,36 +380,35 @@
-        document.getElementById('titulo-form').innerText = "CADASTRO DE CLIENTE";
-    }
-
-    function filtrarClientes() {
-        if(document.getElementById('clientes').style.display !== 'block') document.getElementById('aba-clientes-btn').click();
-        renderizarClientes(document.getElementById('campoPesquisa').value);
-    function filtrarClientesGeral() {
-        const termo = document.getElementById('campoPesquisa').value;
-        if(document.getElementById('clientes').style.display === 'block') renderizarClientes(termo);
-        if(document.getElementById('historico').style.display === 'block') renderizarHistorico(termo);
-    }
-
-    /* LÓGICA DA ABA NOVA OC */
-    /* LÓGICA DA NOVA OC */
-    function atualizarConfiguracoesIniciaisOC() {
-        if(document.getElementById('oc-editando-id').value !== "") return; 
-
-        const select = document.getElementById('oc-cliente');
-        select.innerHTML = '<option value="">-- Escolha um Cliente --</option>';
-        const ordenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
-        ordenados.forEach(c => {
-        [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
-            select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
-        });
-
-        const hoje = new Date();
-        document.getElementById('oc-emissao').value = hoje.toISOString().split('T')[0];
-
-        const vencimento = new Date();
-        vencimento.setDate(hoje.getDate() + 15);
-        document.getElementById('oc-vencimento').value = vencimento.toISOString().split('T')[0];
-
-        const container = document.getElementById('oc-itens-container');
-        if(container.children.length === 0) {
-            adicionarLinhaItem();
-        }
-        if(container.children.length === 0) adicionarLinhaItem();
-    }
-
-    function adicionarLinhaItem() {
-    function adicionarLinhaItem(tipo="", desc="", qtd=1, valor="0.00", total="0.00") {
-        const container = document.getElementById('oc-itens-container');
-        const timestamp = Date.now();
-        const timestamp = Date.now() + Math.random();
-        const linha = document.createElement('div');
-        linha.className = 'item-oc-linha';
-        linha.id = `item-${timestamp}`;
-@@ -360,62 +417,273 @@
-            <div>
-                <label>Tipo</label>
-                <select class="item-tipo">
-                    <option value="Mão de Obra">Mão de Obra</option>
-                    <option value="Peça Mecânica">Peça Mecânica</option>
-                    <option value="Mão de Obra" ${tipo === "Mão de Obra" ? "selected" : ""}>Mão de Obra</option>
-                    <option value="Peça Mecânica" ${tipo === "Peça Mecânica" ? "selected" : ""}>Peça Mecânica</option>
-                </select>
-            </div>
-            <div><label>Descrição</label><input type="text" class="item-desc" placeholder="Ex: Manutenção da Válvula"></div>
-            <div><label>Qtd</label><input type="number" class="item-qtd" value="1" min="1" oninput="calcularTotalItem('${timestamp}')"></div>
-            <div><label>Preço Unit. (R$)</label><input type="number" class="item-valor" value="0.00" step="0.01" oninput="calcularTotalItem('${timestamp}')"></div>
-            <div><label>Preço Total (R$)</label><input type="number" class="item-total" value="0.00" readonly style="background:#121212; color:#aaa;"></div>
-            <div><label>Descrição</label><input type="text" class="item-desc" placeholder="Ex: Manutenção" value="${desc}"></div>
-            <div><label>Qtd</label><input type="number" class="item-qtd" value="${qtd}" min="1" oninput="calcularTotalItem('${timestamp}')"></div>
-            <div><label>Preço Unit. (R$)</label><input type="number" class="item-valor" value="${valor}" step="0.01" oninput="calcularTotalItem('${timestamp}')"></div>
-            <div><label>Preço Total (R$)</label><input type="number" class="item-total" value="${total}" readonly style="background:#121212; color:#aaa;"></div>
-            <button class="btn-remover-item" onclick="removerLinhaItem('${timestamp}')">X</button>
-        `;
-        container.appendChild(linha);
-        calcularTotaisFinais();
-    }
-
-    function removerLinhaItem(id) {
-        const linha = document.getElementById(`item-${id}`);
-        if(linha) {
-            linha.remove();
-            calcularTotaisFinais();
-        }
-        if(linha) { linha.remove(); calcularTotaisFinais(); }
-    }
-
-    function calcularTotalItem(id) {
-        const linha = document.getElementById(`item-${id}`);
-        if(linha) {
-            const qtd = parseFloat(linha.querySelector('.item-qtd').value) || 0;
-            const valor = parseFloat(linha.querySelector('.item-valor').value) || 0;
-            const total = qtd * valor;
-            linha.querySelector('.item-total').value = total.toFixed(2);
-            linha.querySelector('.item-total').value = (qtd * valor).toFixed(2);
-        }
-        calcularTotaisFinais();
-    }
-
-    function calcularTotaisFinais() {
-        let bruto = 0;
-        document.querySelectorAll('.item-total').forEach(input => {
-            bruto += parseFloat(input.value) || 0;
-        });
-
-        document.querySelectorAll('.item-total').forEach(input => bruto += parseFloat(input.value) || 0);
-        document.getElementById('oc-total-bruto').value = bruto.toFixed(2);
-
-        const entrada = parseFloat(document.getElementById('oc-entrada').value) || 0;
-        const desconto = parseFloat(document.getElementById('oc-desconto').value) || 0;
-        
-        const final = bruto - entrada - desconto;
-        document.getElementById('oc-total-final').innerText = `R$ ${final.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-
-    function salvarOC() {
-        const clienteId = document.getElementById('oc-cliente').value;
-        if(!clienteId) return alert("Por favor, selecione um cliente para fechar a Ordem de Compra.");
-        if(!clienteId) return alert("Por favor, selecione um cliente.");
-
-        const idEditando = document.getElementById('oc-editando-id').value;
-        const clienteNome = document.getElementById('oc-cliente').options[document.getElementById('oc-cliente').selectedIndex].text;
-
-        alert("Ordem de Compra (OC) salva com sucesso!");
-        let itensColetados = [];
-        document.querySelectorAll('.item-oc-linha').forEach(l => {
-            itensColetados.push({
-                tipo: l.querySelector('.item-tipo').value,
-                desc: l.querySelector('.item-desc').value,
-                qtd: parseInt(l.querySelector('.item-qtd').value) || 1,
-                valor: l.querySelector('.item-valor').value,
-                total: l.querySelector('.item-total').value
-            });
-        });
-
-        const dadosOC = {
-            id: idEditando ? parseInt(idEditando) : (historicoOC.length > 0 ? Math.max(...historicoOC.map(o => o.id)) + 1 : 1),
-            clienteId: parseInt(clienteId),
-            clienteNome: clienteNome,
-            mecanico: document.getElementById('oc-mecanico').value,
-            placa: document.getElementById('oc-placa').value.toUpperCase().trim() || '-',
-            km: document.getElementById('oc-km').value || '0',
-            emissao: document.getElementById('oc-emissao').value,
-            vencimento: document.getElementById('oc-vencimento').value,
-            totalBruto: document.getElementById('oc-total-bruto').value,
-            entrada: document.getElementById('oc-entrada').value,
-            desconto: document.getElementById('oc-desconto').value,
-            totalLiquido: parseFloat(document.getElementById('oc-total-bruto').value) - parseFloat(document.getElementById('oc-entrada').value) - parseFloat(document.getElementById('oc-desconto').value),
-            itens: itensColetados
-        };
-
-        if(idEditando) {
-            const idx = historicoOC.findIndex(o => o.id == idEditando);
-            if(idx !== -1) historicoOC[idx] = dadosOC;
-        } else {
-            historicoOC.push(dadosOC);
-        }
-
-        limparFormularioOC();
-        alert("Ordem de Compra salva com sucesso!");
-        abrirAba(null, 'historico');
-        document.getElementById('aba-historico-btn').classList.add('ativa');
-    }
-
-    function limparFormularioOC() {
-        document.getElementById('oc-editando-id').value = '';
-        document.getElementById('oc-cliente').value = '';
-        document.getElementById('oc-placa').value = '';
-        document.getElementById('oc-km').value = '';
-        document.getElementById('oc-entrada').value = '0.00';
-        document.getElementById('oc-desconto').value = '0.00';
-        document.getElementById('oc-itens-container').innerHTML = '';
-        document.getElementById('btn-salvar-oc').innerText = "SALVAR ORDEM DE COMPRA";
-    }
-
-    /* HISTÓRICO */
-    function renderizarHistorico(filtro = '') {
-        const grid = document.getElementById('lista-historico');
-        grid.innerHTML = '';
-
-        let ordenados = [...historicoOC].sort((a, b) => new Date(b.emissao) - new Date(a.emissao));
-        if(filtro) ordenados = ordenados.filter(o => o.clienteNome.toLowerCase().includes(filtro.toLowerCase()) || o.placa.toLowerCase().includes(filtro.toLowerCase()));
-
-        if(ordenados.length === 0) {
-            grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhuma Ordem de Compra encontrada.</p>';
-            return;
-        }
-
-        ordenados.forEach(oc => {
-            const dataFormatada = oc.emissao.split('-').reverse().join('/');
-            const div = document.createElement('div');
-            div.className = 'oc-caixa';
-            div.innerHTML = `
-                <div>
-                    <div class="oc-titulo">OC #${oc.id} - ${oc.clienteNome}</div>
-                    <div class="oc-info"><span>📅 Emissão</span>${dataFormatada}</div>
-                    <div class="oc-info"><span>🚘 Placa do Veículo</span>${oc.placa}</div>
-                    <div class="oc-info"><span>🔧 Mecânico</span>${oc.mecanico}</div>
-                    <div class="oc-info"><span>💰 Valor Total Líquido</span>R$ ${oc.totalLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                </div>
-                <div class="oc-acoes">
-                    <button class="btn-acao btn-editar" onclick="editarOC(${oc.id})">Editar</button>
-                    <button class="btn-acao btn-excluir" onclick="excluirOC(${oc.id})">Excluir</button>
-                    <button class="btn-acao btn-pdf" onclick="visualizarPDF(${oc.id})">PDF</button>
-                </div>`;
-            grid.appendChild(div);
-        });
-    }
-
-    function editarOC(id) {
-        const oc = historicoOC.find(o => o.id === id);
-        if(!oc) return;
-
-        document.getElementById('oc-editando-id').value = oc.id;
-        
-        const selectCliente = document.getElementById('oc-cliente');
-        selectCliente.innerHTML = '';
-        clientesBD.forEach(c => selectCliente.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
-        selectCliente.value = oc.clienteId;
-
-        document.getElementById('oc-mecanico').value = oc.mecanico;
-        document.getElementById('oc-placa').value = oc.placa;
-        document.getElementById('oc-km').value = oc.km;
-        document.getElementById('oc-emissao').value = oc.emissao;
-        document.getElementById('oc-vencimento').value = oc.vencimento;
-        document.getElementById('oc-entrada').value = oc.entrada;
-        document.getElementById('oc-desconto').value = oc.desconto;
-
-        const container = document.getElementById('oc-itens-container');
-        container.innerHTML = '';
-        oc.itens.forEach(i => adicionarLinhaItem(i.tipo, i.desc, i.qtd, i.valor, i.total));
-
-        document.getElementById('btn-salvar-oc').innerText = "ATUALIZAR ORDEM DE COMPRA";
-
-        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
-        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
-        document.getElementById('os').style.display = 'block';
-        document.getElementById('aba-os-btn').classList.add('ativa');
-    }
-
-    function excluirOC(id) {
-        if(confirm("Tem certeza que deseja remover esta Ordem de Compra definitivamente?")) {
-            historicoOC = historicoOC.filter(o => o.id !== id);
-            renderizarHistorico();
-        }
-    }
-
-    /* VISUALIZAÇÃO DO PDF ATUALIZADO CONFORME REQUISITADO */
-    function visualizarPDF(id) {
-        const oc = historicoOC.find(o => o.id === id);
-        if(!oc) return;
-
-        let linhasHtml = '';
-        oc.itens.forEach(i => {
-            linhasHtml += `
-                <tr>
-                    <td style="color: #475569; font-weight: bold; font-size: 11px;">${i.tipo}</td>
-                    <td style="font-weight: 500;">${i.desc || '-'}</td>
-                    <td style="text-align: center;">${i.qtd}</td>
-                    <td>R$ ${parseFloat(i.valor).toFixed(2).replace('.', ',')}</td>
-                    <td style="font-weight: 600; text-align: right;">R$ ${parseFloat(i.total).toFixed(2).replace('.', ',')}</td>
-                </tr>`;
-        });
-
-        const containerImpressao = document.getElementById('container-impressao-direta');
-        
-        containerImpressao.innerHTML = `
-            <div class="pdf-wrapper">
-                <button class="btn-voltar-sistema" onclick="fecharImpressaoPDF()">← Voltar ao Sistema</button>
-                
-                <div class="pdf-header-empresa">
-                    <div>
-                        <h1>AMM VÁLVULAS</h1>
-                        <p>CNPJ: 62.125.027/0001-68</p>
-                    </div>
-                    <div class="pdf-num-oc">ORDEM DE COMPRA #00${oc.id}</div>
-                </div>
-
-                <div class="pdf-bloco-cliente">
-                    <strong>Cliente / Razão Social</strong>
-                    <span>${oc.clienteNome}</span>
-                </div>
-
-                <div class="pdf-grid-dados">
-                    <div class="pdf-dado-col">
-                        <strong>Placa</strong>
-                        <span>${oc.placa}</span>
-                    </div>
-                    <div class="pdf-dado-col">
-                        <strong>KM</strong>
-                        <span>${oc.km > 0 ? oc.km : '-'}</span>
-                    </div>
-                    <div class="pdf-dado-col">
-                        <strong>Data de Emissão</strong>
-                        <span>${oc.emissao.split('-').reverse().join('/')}</span>
-                    </div>
-                    <div class="pdf-dado-col">
-                        <strong>Vencimento</strong>
-                        <span>${oc.vencimento.split('-').reverse().join('/')}</span>
-                    </div>
-                </div>
-
-                <table class="pdf-tabela">
-                    <thead>
-                        <tr>
-                            <th style="width: 18%;">Tipo</th>
-                            <th style="width: 44%;">Descrição do Item / Serviço</th>
-                            <th style="width: 8%; text-align: center;">Qtd</th>
-                            <th style="width: 15%;">Preço Unit.</th>
-                            <th style="width: 15%; text-align: right;">Valor Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${linhasHtml}
-                    </tbody>
-                </table>
-
-                <div class="pdf-financeiro-rodape">
-                    <div class="pdf-caixa-totais">
-                        <p>Subtotal Bruto: <span>R$ ${parseFloat(oc.totalBruto).toFixed(2).replace('.', ',')}</span></p>
-                        <p>Desconto Comercial: <span>(-) R$ ${parseFloat(oc.desconto).toFixed(2).replace('.', ',')}</span></p>
-                        <div class="linha-total-final">
-                            <text>Valor Total</text>
-                            <h3>R$ ${oc.totalLiquido.toFixed(2).replace('.', ',')}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.getElementById('conteudo-principal-sistema').style.display = 'none';
-        containerImpressao.style.display = 'block';
-
-        setTimeout(() => {
-            window.print();
-        }, 300);
-    }
-
-    function fecharImpressaoPDF() {
-        document.getElementById('container-impressao-direta').style.display = 'none';
-        document.getElementById('conteudo-principal-sistema').style.display = 'block';
-    }
-
-    renderizarClientes();
-</script>
-
-</body>
+<!DOCTYPE html>  <html lang="pt-BR">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>AMM VÁLVULAS</title>  
+<style>  
+  *{  
+    margin:0;  
+    padding:0;  
+    box-sizing:border-box;  
+    font-family:Arial,sans-serif;  
+  }  body{
+background:#1d1f23;
+color:white;
+}
+
+header{
+background:#24272c;
+padding:15px;
+}
+
+.topo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.empresa h1{
+font-size:18px;
+white-space:nowrap;
+}
+
+.empresa p{
+font-size:12px;
+color:#4da3ff;
+}
+
+.pesquisa{
+width:150px;
+}
+
+.pesquisa input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:10px;
+background:#32353b;
+color:white;
+}
+
+.abas{
+background:#24272c;
+overflow-x:auto;
+white-space:nowrap;
+border-bottom: 1px solid #32353b;
+}
+
+.abas::-webkit-scrollbar{
+display:none;
+}
+
+.abas button{
+background:none;
+border:none;
+color:#a0a5b0;
+padding:15px;
+font-size:15px;
+cursor: pointer;
+transition: background 0.2s, color 0.2s;
+}
+
+.abas button:hover {
+color: white;
+}
+
+.abas button.ativa{
+border-bottom:3px solid #2196f3;
+color: white;
+font-weight: bold;
+}
+
+main{
+padding:20px;
+}
+
+.conteudo-aba {
+display: none;
+}
+
+.conteudo-aba.ativo {
+display: block;
+}
+
+.card{
+background:#2b2e34;
+padding:20px;
+border-radius:20px;
+max-width: 800px;
+margin: 0 auto;
+}
+
+h2{
+margin-bottom:20px;
+border-bottom: 1px solid #3a3d44;
+padding-bottom: 10px;
+color: #4da3ff;
+}
+
+input, select, textarea {
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border:none;
+border-radius:12px;
+background:#3a3d44;
+color:white;
+font-size: 14px;
+}
+
+input:focus, select:focus {
+outline: 2px solid #2196f3;
+}
+
+button.salvar, button.btn-pdf, button.btn-add {
+width:100%;
+padding:15px;
+background:#2196f3;
+border:none;
+border-radius:15px;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor: pointer;
+transition: background 0.2s;
+}
+
+button.salvar:hover { background: #1976d2; }
+button.btn-pdf { background: #ff9800; margin-top: 15px; }
+button.btn-pdf:hover { background: #e65100; }
+button.btn-add { background: #4caf50; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; width: auto;}
+button.btn-add:hover { background: #388e3c; }
+
+/* FORMULÁRIO EM DUAS COLUNAS */
+.form-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 15px;
+}
+
+/* TABELA DE ITENS DA OS */
+.tabela-itens {
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 15px;
+}
+.tabela-itens th {
+text-align: left;
+padding: 10px;
+color: #a0a5b0;
+font-size: 14px;
+}
+.tabela-itens td {
+padding: 5px;
+}
+.tabela-itens input {
+margin-bottom: 0;
+}
+
+/* RESUMO FINANCEIRO */
+.financeiro-os {
+background: #32353b;
+padding: 15px;
+border-radius: 12px;
+margin-top: 15px;
+}
+.financeiro-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+gap: 15px;
+}
+.total-destaque {
+font-size: 20px;
+font-weight: bold;
+color: #4caf50;
+display: flex;
+align-items: center;
+}
+
+/* LAYOUT DA LISTA DE CLIENTES */
+.grid-clientes { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+.cliente-box { background: #32353b; padding: 18px; border-radius: 12px; border-left: 4px solid #2196f3; }
+.cliente-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #3a3d44; padding-bottom: 8px; }
+.cliente-box h3 { color: #4da3ff; font-size: 18px; }
+.cliente-acoes { display: flex; gap: 10px; }
+.btn-editar, .btn-excluir { border: none; padding: 6px 12px; border-radius: 6px; color: white; font-weight: bold; font-size: 12px; cursor: pointer; }
+.btn-editar { background: #4caf50; } .btn-excluir { background: #f44336; }
+.info-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+.info-group p { font-size: 14px; color: #e0e0e0; }
+.info-group strong { color: #a0a5b0; }
+.lista-vazia { text-align: center; color: #a0a5b0; padding: 20px; }
+</style>
+
+</head>  
+<body>    <header>  
+    <div class="topo">  
+      <div class="empresa">  
+        <h1>AMM VÁLVULAS</h1>  
+        <p>CNPJ: 62.125.027/0001-68</p>  
+      </div>  
+      <div class="pesquisa">  
+        <input type="text" placeholder="Pesquisar...">  
+      </div>  
+    </div>  
+  </header>    <div class="abas">  
+    <button id="aba-cadastro-btn" class="btn-aba" onclick="abrirAba(event, 'cadastro')">Cadastro de Clientes</button>  
+    <button id="aba-clientes-btn" class="btn-aba" onclick="abrirAba(event, 'clientes')">Clientes</button>  
+    <button id="aba-os-btn" class="btn-aba ativa" onclick="abrirAba(event, 'os')">Ordem de Serviço</button>  
+    <button class="btn-aba" onclick="abrirAba(event, 'historico')">Histórico</button>  
+    <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">Financeiro</button>  
+    <button class="btn-aba" onclick="abrirAba(event, 'devedores')">Devedores</button>  
+  </div>    <main>  
+    <!-- ABA 1: CADASTRO -->  
+    <div id="cadastro" class="conteudo-aba">  
+      <div class="card">  
+        <h2 id="titulo-form">Cadastro de Clientes</h2>  
+        <input type="hidden" id="cliente-id">  
+        <input type="text" id="nome" placeholder="Nome do Cliente">  
+        <input type="text" id="cpf" placeholder="CPF ou CNPJ" maxlength="18">  
+        <input type="text" id="telefone" placeholder="Telefone" maxlength="15">  
+        <input type="text" id="cidade" placeholder="Cidade e Estado (Ex: Diamantino-MT)">  
+        <input type="text" id="endereco" placeholder="Endereço">  
+        <input type="email" id="email" placeholder="E-mail">  
+        <button class="salvar" id="btn-salvar-texto" onclick="salvarCliente()">SALVAR CLIENTE</button>  
+      </div>  
+    </div>  <!-- ABA 2: LISTA DE CLIENTES -->  
+<div id="clientes" class="conteudo-aba">  
+  <div class="card">  
+    <h2>Clientes Cadastrados</h2>  
+    <div class="grid-clientes" id="container-clientes"></div>  
+  </div>  
+</div>  
+
+<!-- ABA 3: ORDEM DE SERVIÇO -->  
+<div id="os" class="conteudo-aba ativo">  
+  <div class="card">  
+    <h2>Nova Ordem de Serviço</h2>  
+      
+    <!-- Grid de Cabeçalho da OS -->  
+    <div class="form-grid">  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Cliente</label>  
+        <select id="os-cliente"></select>  
+      </div>  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Placa</label>  
+        <input type="text" id="os-placa" placeholder="ABC-1234">  
+      </div>  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">KM</label>  
+        <input type="number" id="os-km" placeholder="Ex: 150000">  
+      </div>  
+    </div>  
+
+    <div class="form-grid">  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Mecânico</label>  
+        <input type="text" id="os-mecanico" placeholder="Nome do Mecânico">  
+      </div>  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Apelido ou E-mail</label>  
+        <input type="text" id="os-apelido-email" placeholder="Apelido/E-mail">  
+      </div>  
+    </div>  
+
+    <div class="form-grid">  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Data do Serviço</label>  
+        <input type="date" id="os-data-servico">  
+      </div>  
+      <div>  
+        <label style="font-size:12px; color:#a0a5b0;">Vencimento (15 Dias)</label>  
+        <input type="date" id="os-data-vencimento">  
+      </div>  
+    </div>  
+
+    <!-- Seção de Itens da OS -->  
+    <h3 style="margin: 15px 0 10px 0; font-size:16px; color:#4da3ff;">Itens e Serviços</h3>  
+    <table class="tabela-itens">  
+      <thead>  
+        <tr>  
+          <th style="width: 50%;">Descrição do Item</th>  
+          <th style="width: 12%;">Qtd</th>  
+          <th style="width: 18%;">Preço Unit. (R$)</th>  
+          <th style="width: 20%;">Total (R$)</th>  
+        </tr>  
+      </thead>  
+      <tbody id="corpo-itens-os">  
+        <!-- As linhas de itens entrarão aqui dinamicamente -->  
+      </tbody>  
+    </table>  
+    <button class="btn-add" onclick="adicionarLinhaItem()">+ Adicionar Item</button>  
+
+    <!-- Resumo Financeiro na Parte Inferior -->  
+    <div class="financeiro-os">  
+      <div class="financeiro-grid">  
+        <div>  
+          <label style="font-size:12px; color:#a0a5b0;">Entrada (R$)</label>  
+          <input type="number" id="os-entrada" value="0" oninput="calcularTotalOS()">  
+        </div>  
+        <div>  
+          <label style="font-size:12px; color:#a0a5b0;">Desconto (R$)</label>  
+          <input type="number" id="os-desconto" value="0" oninput="calcularTotalOS()">  
+        </div>  
+        <div>  
+          <label style="font-size:12px; color:#a0a5b0;">Valor Total Geral</label>  
+          <div class="total-destaque" id="os-total-geral">R$ 0,00</div>  
+        </div>  
+      </div>  
+    </div>  
+
+    <button class="btn-pdf" onclick="visualizarPDF()">VISUALIZAR PDF</button>  
+  </div>  
+</div>  
+
+<!-- OUTRAS ABAS -->  
+<div id="historico" class="conteudo-aba"><div class="card"><h2>Histórico</h2><p>Conteúdo em desenvolvimento...</p></div></div>  
+<div id="financeiro" class="conteudo-aba"><div class="card"><h2>Financeiro</h2><p>Conteúdo em desenvolvimento...</p></div></div>  
+<div id="devedores" class="conteudo-aba"><div class="card"><h2>Devedores</h2><p>Conteúdo em desenvolvimento...</p></div></div>
+
+  </main>  <script>  
+let clientesBanco = [  
+  { id: 1, nome: "João Silva", cpf: "123.456.789-00", telefone: "(65) 99999-1234", cidade: "Diamantino-MT", endereco: "Rua das Válvulas, 100", email: "joao@email.com" },  
+  { id: 2, nome: "Metalúrgica AMM Ltda", cpf: "62.125.027/0001-68", telefone: "(65) 3333-4444", cidade: "Cuiabá-MT", endereco: "Av. Industrial, 500", email: "contato@amm.com" }  
+];  
+  
+// LÓGICA DAS ABAS  
+function abrirAba(evt, nomeAba) {  
+  let i, conteudoAba, botoesAba;  
+  conteudoAba = document.getElementsByClassName("conteudo-aba");  
+  for (i = 0; i < conteudoAba.length; i++) { conteudoAba[i].style.display = "none"; }  
+  botoesAba = document.getElementsByClassName("btn-aba");  
+  for (i = 0; i < botoesAba.length; i++) { botoesAba[i].className = botoesAba[i].className.replace(" ativa", ""); }  
+  document.getElementById(nomeAba).style.display = "block";  
+  if(evt) evt.currentTarget.className += " ativa";  
+}  
+  
+// INICIALIZA DATAS DA OS (Data Atual e +15 dias)  
+function inicializarDatasOS() {  
+  const hoje = new Date();  
+  const vencimento = new Date();  
+  vencimento.setDate(hoje.getDate() + 15);  
+  
+  document.getElementById('os-data-servico').value = hoje.toISOString().split('T')[0];  
+  document.getElementById('os-data-vencimento').value = vencimento.toISOString().split('T')[0];  
+}  
+  
+// ATUALIZA SELECT DE CLIENTES NA OS  
+function atualizarSelectClientes() {  
+  const select = document.getElementById('os-cliente');  
+  select.innerHTML = "";  
+  clientesBanco.forEach(c => {  
+    const opt = document.createElement('option');  
+    opt.value = c.id;  
+    opt.innerText = c.nome;  
+    select.appendChild(opt);  
+  });  
+}  
+  
+// ADICIONAR LINHA DE ITEM NA TABELA  
+function adicionarLinhaItem() {  
+  const tbody = document.getElementById('corpo-itens-os');  
+  const tr = document.createElement('tr');  
+  tr.innerHTML = `  
+    <td><input type="text" class="item-desc" placeholder="Ex: Reparo de Válvula"></td>  
+    <td><input type="number" class="item-qtd" value="1" min="1" oninput="calcularLinhaTotal(this)"></td>  
+    <td><input type="number" class="item-unit" value="0" min="0" step="0.01" oninput="calcularLinhaTotal(this)"></td>  
+    <td><input type="text" class="item-total" value="R$ 0,00" readonly style="background:#2b2e34; border:none;"></td>  
+  `;  
+  tbody.appendChild(tr);  
+}  
+  
+// CALCULA O PREÇO TOTAL DE UMA LINHA ESPECÍFICA  
+function calcularLinhaTotal(input) {  
+  const tr = input.closest('tr');  
+  const qtd = parseFloat(tr.querySelector('.item-qtd').value) || 0;  
+  const unit = parseFloat(tr.querySelector('.item-unit').value) || 0;  
+  const total = qtd * unit;  
+    
+  tr.querySelector('.item-total').value = "R$ " + total.toFixed(2);  
+  calcularTotalOS();  
+}  
+  
+// CALCULA O BALANÇO FINANCEIRO GERAL DA OS  
+function calcularTotalOS() {  
+  let subtotal = 0;  
+  const linhas = document.querySelectorAll('#corpo-itens-os tr');  
+    
+  linhas.forEach(tr => {  
+    const qtd = parseFloat(tr.querySelector('.item-qtd').value) || 0;  
+    const unit = parseFloat(tr.querySelector('.item-unit').value) || 0;  
+    subtotal += qtd * unit;  
+  });  
+  
+  const entrada = parseFloat(document.getElementById('os-entrada').value) || 0;  
+  const desconto = parseFloat(document.getElementById('os-desconto').value) || 0;  
+    
+  // Total = Subtotal dos itens - Entrada - Desconto  
+  const totalGeral = subtotal - entrada - desconto;  
+    
+  document.getElementById('os-total-generico-invisivel')?.setVolume || null; // salvaguarda  
+  document.getElementById('os-total-geral').innerText = "R$ " + (totalGeral < 0 ? 0 : totalGeral).toFixed(2);  
+}  
+  
+// SIMULAÇÃO DE VISUALIZAR PDF  
+function visualizarPDF() {  
+  alert("Gerando visualização de PDF da Ordem de Serviço com os itens e valores calculados...");  
+}  
+  
+// CLIENTES: MÁSCARAS E RENDERIZAÇÃO (Mantidos da etapa anterior)  
+document.getElementById('telefone').addEventListener('input', function(e){  
+  let x = e.target.value.replace(/\D/g,'');  
+  x = x.replace(/^(\d{2})(\d)/g,'($1) $2');  
+  x = x.replace(/(\d{5})(\d)/,'$1-$2');  
+  e.target.value = x;  
+});  
+  
+document.getElementById('cpf').addEventListener('input', function(e){  
+  let x = e.target.value.replace(/\D/g,'');  
+  if (x.length <= 11) {  
+    x = x.replace(/(\d{3})(\d)/, "$1.$2");  
+    x = x.replace(/(\d{3})(\d)/, "$1.$2");  
+    x = x.replace(/(\d{3})(\d{1,2})$/, "$1-$2");  
+  } else {  
+    x = x.substring(0, 14);  
+    x = x.replace(/^(\d{2})(\d)/, "$1.$2");  
+    x = x.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");  
+    x = x.replace(/\.(\d{3})(\d)/, ".$1/$2");  
+    x = x.replace(/(\d{4})(\d)/, "$1-$2");  
+  }  
+  e.target.value = x;  
+});  
+  
+function renderizarClientes() {  
+  const container = document.getElementById('container-clientes');  
+  container.innerHTML = "";  
+  if(clientesBanco.length === 0) {  
+    container.innerHTML = '<p class="lista-vazia">Nenhum cliente cadastrado.</p>';  
+    return;  
+  }  
+  clientesBanco.forEach(cliente => {  
+    const box = document.createElement('div');  
+    box.className = 'cliente-box';  
+    box.innerHTML = `  
+      <div class="cliente-topo">  
+        <h3>${cliente.nome}</h3>  
+        <div class="cliente-acoes">  
+          <button class="btn-editar" onclick="prepararEdicao(${cliente.id})">Editar</button>  
+          <button class="btn-excluir" onclick="excluirCliente(${cliente.id})">Excluir</button>  
+        </div>  
+      </div>  
+      <div class="info-group">  
+        <p><strong>CPF/CNPJ:</strong> ${cliente.cpf}</p>  
+        <p><strong>Telefone:</strong> ${cliente.telefone}</p>  
+        <p><strong>Cidade:</strong> ${cliente.cidade}</p>  
+        <p><strong>Endereço:</strong> ${cliente.endereco}</p>  
+        <p><strong>E-mail:</strong> ${cliente.email}</p>  
+      </div>  
+    `;  
+    container.appendChild(box);  
+  });  
+  atualizarSelectClientes();  
+}  
+  
+function salvarCliente() {  
+  const id = document.getElementById('cliente-id').value;  
+  const nome = document.getElementById('nome').value;  
+  const cpf = document.getElementById('cpf').value;  
+  const telefone = document.getElementById('telefone').value;  
+  const cidade = document.getElementById('cidade').value;  
+  const endereco = document.getElementById('endereco').value;  
+  const email = document.getElementById('email').value;  
+  
+  if(!nome) { alert("Por favor, preencha o nome."); return; }  
+  
+  if(id) {  
+    const index = clientesBanco.findIndex(c => c.id == id);  
+    if(index !== -1) clientesBanco[index] = { id: Number(id), nome, cpf, telefone, cidade, endereco, email };  
+  } else {  
+    clientesBanco.push({ id: Date.now(), nome, cpf, telefone, cidade, endereco, email });  
+  }  
+  limparFormulario();  
+  renderizarClientes();  
+  document.getElementById('aba-clientes-btn').click();  
+}  
+  
+function excluirCliente(id) {  
+  clientesBanco = clientesBanco.filter(cliente => cliente.id !== id);  
+  renderizarClientes();  
+}  
+  
+function prepararEdicao(id) {  
+  const cliente = clientesBanco.find(c => c.id === id);  
+  if(!cliente) return;  
+  document.getElementById('cliente-id').value = cliente.id;  
+  document.getElementById('nome').value = cliente.nome;  
+  document.getElementById('cpf').value = cliente.cpf;  
+  document.getElementById('telefone').value = cliente.telefone;  
+  document.getElementById('cidade').value = cliente.cidade;  
+  document.getElementById('endereco').value = cliente.endereco;  
+  document.getElementById('email').value = cliente.email;  
+  document.getElementById('titulo-form').innerText = "Alterar Dados do Cliente";  
+  document.getElementById('btn-salvar-texto').innerText = "ATUALIZAR DADOS";  
+  document.getElementById('aba-cadastro-btn').click();  
+}  
+  
+function limparFormulario() {  
+  document.getElementById('cliente-id').value = "";  
+  document.getElementById('nome').value = "";  
+  document.getElementById('cpf').value = "";  
+  document.getElementById('telefone').value = "";  
+  document.getElementById('cidade').value = "";  
+  document.getElementById('endereco').value = "";  
+  document.getElementById('email').value = "";  
+  document.getElementById('titulo-form').innerText = "Cadastro de Clientes";  
+  document.getElementById('btn-salvar-texto').innerText = "SALVAR CLIENTE";  
+}  
+  
+// Execuções ao iniciar a página  
+inicializarDatasOS();  
+renderizarClientes();  
+adicionarLinhaItem(); // Inicia com uma linha de item padrão vazia  
+</script>  </body>  
 </html>
