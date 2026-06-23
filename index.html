@@ -274,6 +274,18 @@
 </div>
 
 <script>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyC8RewsJ1mGmpraIAvH1WTiZkmKDU5z5X4",
+    authDomain: "amm-valvulas.firebaseapp.com",
+    projectId: "amm-valvulas",
+    storageBucket: "amm-valvulas.firebasestorage.app",
+    messagingSenderId: "747172641468",
+    appId: "1:747172641468:web:c90505d70cb9bcdf6eaeb9"
+};
+const db = getFirestore(initializeApp(firebaseConfig));
     let clientesBD = [
         { id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222", email: "filial@ammvalvulas.com.br", endereco: "Rua das Juntas, 45", cidade: "Santos / SP" },
         { id: 2, nome: "Açoes Norte Distribuidora", documento: "12.345.678/0001-00", whatsapp: "(11) 99999-1111", email: "contato@aconorte.com.br", endereco: "Av. Industrial, 1500", cidade: "São Paulo / SP" },
@@ -340,6 +352,7 @@
             if(idx !== -1) clientesBD[idx] = { id: parseInt(idEditando), nome, documento, whatsapp, email, endereco, cidade };
         } else {
             const novoId = clientesBD.length > 0 ? Math.max(...clientesBD.map(c => c.id)) + 1 : 1;
+            await setDoc(doc(db, "clientes", id), { nome, documento, whatsapp, email, endereco, cidade });
             clientesBD.push({ id: novoId, nome, documento, whatsapp, email, endereco, cidade });
         }
         limparFormulario();
