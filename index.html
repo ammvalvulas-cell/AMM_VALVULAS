@@ -1,94 +1,304 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMM VÁLVULAS - Sistema</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background:#121212; color:white; }
-        header { background:#1a1d23; padding: 15px; border-bottom: 2px solid #24272c; }
-        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
-        .logo-area h1 { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .logo-area p { font-size: 12px; color: #4da3ff; font-weight: bold; }
-        .pesquisa-area { width: 100%; max-width: 300px; }
-        .pesquisa-area input { width: 100%; padding: 10px 20px; border-radius: 25px; border: 2px solid #2196f3; background: #0d0d0d; color: #fff; font-size: 16px; outline: none; }
-        .abas { background:#1a1d23; display:flex; overflow-x: auto; border-bottom: 1px solid #333; padding: 10px 5px; white-space: nowrap; }
-        .abas button { background:none; border:none; color:#777; padding: 10px 12px; cursor:pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
-        .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
-        main { padding: 15px; max-width: 1200px; margin: 0 auto; }
-        .conteudo-aba { display: none; }
-        .conteudo-aba.ativo { display: block; }
-        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        .form-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-        .btn-salvar { width: 100%; padding: 12px; border-radius: 20px; border: none; cursor: pointer; color: white; background: linear-gradient(90deg, #2196f3, #1565c0); }
-        .cliente-caixa, .oc-caixa { background: #15181c; border: 1px solid #2d3139; padding: 15px; margin-bottom: 10px; border-radius: 12px; }
-        .item-oc-linha { display: grid; grid-template-columns: 1fr; gap: 8px; background: #15181c; padding: 12px; border-radius: 10px; }
-        .totais-oc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AMM Válvulas & Mecânica</title>
+
+<meta name="description" content="Especialistas em válvulas pneumáticas, freios e mecânica para caminhões.">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    color:#333;
+}
+
+header{
+    background:#0f172a;
+    color:white;
+    padding:20px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1200px;
+    margin:auto;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#00d4ff;
+}
+
+.menu{
+    display:flex;
+    gap:20px;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+}
+
+.hero{
+    min-height:80vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
+    url("https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1600");
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+.hero h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:1.2rem;
+    max-width:700px;
+}
+
+.btn{
+    margin-top:25px;
+    display:inline-block;
+    background:#25D366;
+    color:white;
+    padding:15px 30px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+section{
+    max-width:1200px;
+    margin:auto;
+    padding:80px 20px;
+}
+
+.titulo{
+    text-align:center;
+    margin-bottom:40px;
+    color:#0f172a;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(0,0,0,.08);
+}
+
+.card h3{
+    margin-bottom:10px;
+}
+
+.contato{
+    background:#0f172a;
+    color:white;
+    border-radius:15px;
+    text-align:center;
+    padding:40px;
+}
+
+footer{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.whatsapp{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    width:65px;
+    height:65px;
+    border-radius:50%;
+    background:#25D366;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:white;
+    font-size:30px;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+    font-size:2rem;
+}
+
+.menu{
+    display:none;
+}
+
+}
+</style>
 </head>
+
 <body>
 
-<div id="conteudo-principal-sistema">
-    <header>
-        <div class="topo">
-            <div class="logo-area"><h1>AMM VÁLVULAS</h1><p>CNPJ: 62.125.027/0001-68</p></div>
-            <div class="pesquisa-area"><input type="text" id="campoPesquisa" placeholder="Pesquisar..." oninput="filtrarClientesGeral()"></div>
-        </div>
-    </header>
+<header>
+<nav>
+<div class="logo">AMM VÁLVULAS</div>
 
-    <div class="abas">
-        <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
-        <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
-        <button class="btn-aba" id="aba-os-btn" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
-        <button class="btn-aba" id="aba-historico-btn" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
-    </div>
-
-    <main>
-        <div id="cadastro" class="conteudo-aba ativo">
-            <div class="card"><h2 id="titulo-form">CADASTRO DE CLIENTE</h2>
-                <input type="hidden" id="editando-id">
-                <div class="form-grid">
-                    <input type="text" id="form-nome" placeholder="Nome">
-                    <input type="text" id="form-documento" placeholder="CPF/CNPJ">
-                    <input type="text" id="form-whatsapp" placeholder="WhatsApp">
-                </div>
-                <button class="btn-salvar" onclick="salvarCliente()">SALVAR CLIENTE</button>
-            </div>
-        </div>
-        <div id="clientes" class="conteudo-aba"><div class="card"><h2>CLIENTES</h2><div id="lista-clientes"></div></div></div>
-        <div id="os" class="conteudo-aba"><div class="card"><h2>NOVA OC</h2><div id="oc-itens-container"></div><button onclick="adicionarLinhaItem()">+ ADICIONAR ITEM</button></div></div>
-        <div id="historico" class="conteudo-aba"><div class="card"><h2>HISTÓRICO</h2><div id="lista-historico"></div></div></div>
-    </main>
+<div class="menu">
+<a href="#servicos">Serviços</a>
+<a href="#empresa">Empresa</a>
+<a href="#contato">Contato</a>
 </div>
 
-<script>
-    // Seus dados iniciais
-    let clientesBD = [{ id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222" }];
-    let historicoOC = [];
+</nav>
+</header>
 
-    // Funções principais
-    function abrirAba(evt, nomeAba) {
-        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
-        document.getElementById(nomeAba).style.display = 'block';
-    }
+<section class="hero">
 
-    function salvarCliente() {
-        const nome = document.getElementById('form-nome').value;
-        const documento = document.getElementById('form-documento').value;
-        const whatsapp = document.getElementById('form-whatsapp').value;
-        clientesBD.push({ id: Date.now(), nome, documento, whatsapp });
-        alert("Cliente Salvo!");
-        abrirAba(null, 'clientes');
-    }
+<h1>AMM Válvulas & Mecânica</h1>
 
-    function renderizarClientes() {
-        const grid = document.getElementById('lista-clientes');
-        grid.innerHTML = clientesBD.map(c => `<div class="cliente-caixa">${c.nome}</div>`).join('');
-    }
-    
-    // Inicialização
-    renderizarClientes();
+<p>
+Especialistas em válvulas pneumáticas, sistemas de freios e mecânica pesada.
+Atendimento rápido, qualidade e confiança.
+</p>
+
+<a
+class="btn"
+href="https://wa.me/5565992426097"
+target="_blank">
+Solicitar Orçamento
+</a>
+
+</section>
+
+<section id="servicos">
+
+<h2 class="titulo">Nossos Serviços</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Válvulas Pneumáticas</h3>
+<p>Manutenção, revisão e troca de válvulas para caminhões.</p>
+</div>
+
+<div class="card">
+<h3>Sistema de Freios</h3>
+<p>Diagnóstico e reparos completos em freios pneumáticos.</p>
+</div>
+
+<div class="card">
+<h3>Mecânica Geral</h3>
+<p>Serviços preventivos e corretivos para veículos pesados.</p>
+</div>
+
+<div class="card">
+<h3>Atendimento Especializado</h3>
+<p>Equipe preparada para resolver problemas com rapidez.</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="empresa">
+
+<h2 class="titulo">Sobre a Empresa</h2>
+
+<p style="text-align:center;max-width:900px;margin:auto;">
+A AMM Válvulas & Mecânica atua na manutenção de caminhões e veículos pesados,
+oferecendo serviços especializados em válvulas pneumáticas, sistemas de freio
+e mecânica geral.
+</p>
+
+</section>
+
+<section id="contato">
+
+<div class="contato">
+
+<h2>Entre em Contato</h2>
+
+<br>
+
+<p><strong>WhatsApp:</strong> (65) 99242-6097</p>
+
+<br>
+
+<p><strong>Atendimento especializado para caminhões e carretas.</strong></p>
+
+<br>
+
+<a
+class="btn"
+href="https://wa.me/5565992426097"
+target="_blank">
+Falar Agora
+</a>
+
+</div>
+
+</section>
+
+<footer>
+© 2026 AMM Válvulas & Mecânica
+</footer>
+
+<a
+class="whatsapp"
+href="https://wa.me/5565992426097"
+target="_blank">
+☎
+</a>
+
+<!-- Firebase -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC8RewsJ1mGmpraIAvH1WTiZkmKDU5z5X4",
+  authDomain: "amm-valvulas.firebaseapp.com",
+  projectId: "amm-valvulas",
+  storageBucket: "amm-valvulas.firebasestorage.app",
+  messagingSenderId: "747172641468",
+  appId: "1:747172641468:web:c90505d70cb9bcdf6eaeb9",
+  measurementId: "G-4L5K9337CV"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+console.log("Firebase conectado com sucesso!");
+
 </script>
+
 </body>
 </html>
