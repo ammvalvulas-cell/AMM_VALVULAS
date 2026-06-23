@@ -1,304 +1,732 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMM VÁLVULAS - Sistema</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background:#121212; color:white; }
 
-<title>AMM Válvulas & Mecânica</title>
+        /* HEADER E PESQUISA */
+        header { background:#1a1d23; padding: 15px; border-bottom: 2px solid #24272c; }
+        .topo { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; }
 
-<meta name="description" content="Especialistas em válvulas pneumáticas, freios e mecânica para caminhões.">
+        .logo-area { display: flex; flex-direction: column; }
+        .logo-area h1 { font-size: 18px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-area p { font-size: 12px; color: #4da3ff; font-weight: bold; }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
+        .pesquisa-area { width: 100%; max-width: 300px; }
+        .pesquisa-area input { 
+            width: 100%; padding: 10px 20px; border-radius: 25px; 
+            border: 2px solid #2196f3; background: #0d0d0d; color: #fff; 
+            font-size: 16px; outline: none; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.2);
+        }
+        .pesquisa-area input:focus { border-color: #4da3ff; box-shadow: 0 0 15px rgba(33, 150, 243, 0.4); }
 
-body{
-    background:#f5f5f5;
-    color:#333;
-}
+        /* ABAS */
+        .abas { 
+            background:#1a1d23; 
+            display:flex; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid #333; 
+            justify-content: flex-start; 
+            padding: 10px 5px; 
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+        .abas::-webkit-scrollbar { display: none; }
+        .abas button { 
+            background:none; border:none; color:#777; padding: 10px 12px; 
+            cursor:pointer; font-weight: bold; text-transform: uppercase; 
+            font-size: 11px; flex-shrink: 0;
+        }
+        .abas button.ativa { color: #2196f3; border-bottom: 2px solid #2196f3; }
 
-header{
-    background:#0f172a;
-    color:white;
-    padding:20px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-}
+        /* CONTEÚDO GERAL */
+        main { padding: 15px; max-width: 1200px; margin: 0 auto; }
+        .conteudo-aba { display: none; }
+        .conteudo-aba.ativo { display: block; }
+        .card { background:#1a1d23; padding: 15px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; }
+        h2 { color: #2196f3; font-size: 14px; margin-bottom: 15px; border-left: 3px solid #2196f3; padding-left: 8px; text-transform: uppercase; }
 
-nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    max-width:1200px;
-    margin:auto;
-}
+        /* FORMULÁRIOS */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        label { font-size: 10px; color: #777; margin-bottom: 1px; display: block; font-weight: bold; text-transform: uppercase; }
+        input, select { 
+            width: 100%; padding: 8px 10px; border-radius: 8px; 
+            border: 1px solid #333; background: #121212; color: #fff; font-size: 14px; outline: none;
+        }
+        input:focus, select:focus { border-color: #2196f3; }
 
-.logo{
-    font-size:28px;
-    font-weight:bold;
-    color:#00d4ff;
-}
+        .btn-salvar { 
+            width: 100%; padding: 12px; border: none; border-radius: 20px; 
+            font-size: 13px; font-weight: bold; cursor: pointer; color: white;
+            background: linear-gradient(90deg, #2196f3, #1565c0);
+        }
 
-.menu{
-    display:flex;
-    gap:20px;
-}
+        /* CARD DE CLIENTES E HISTÓRICO */
+        .clientes-grid, .historico-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .cliente-caixa, .oc-caixa { background: #15181c; border: 1px solid #2d3139; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; }
+        .cliente-nome, .oc-titulo { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 10px; border-bottom: 1px solid #2d3139; padding-bottom: 5px; }
+        .cliente-info, .oc-info { font-size: 12px; color: #aaa; margin-bottom: 6px; display: flex; flex-direction: column; }
+        .cliente-info span, .oc-info span { color: #2196f3; font-size: 10px; text-transform: uppercase; font-weight: bold; }
+        .cliente-acoes, .oc-acoes { display: flex; gap: 8px; margin-top: 15px; border-top: 1px solid #2d3139; padding-top: 10px; flex-wrap: wrap; }
+        .btn-acao { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; text-align: center; text-transform: uppercase; min-width: 70px; }
+        .btn-editar { background: #ff9800; color: #fff; }
+        .btn-excluir { background: #f44336; color: #fff; }
+        .btn-pdf { background: #009688; color: #fff; }
 
-.menu a{
-    color:white;
-    text-decoration:none;
-}
+        /* ITENS DA OC */
+        .item-oc-linha { 
+            display: grid; grid-template-columns: 1fr; gap: 8px; background: #15181c; 
+            padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #252930;
+        }
+        .btn-adicionar-item { background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 5px; }
+        .btn-remover-item { background: #f44336; color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: auto; }
 
-.hero{
-    min-height:80vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:20px;
-    background:linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.7)),
-    url("https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1600");
-    background-size:cover;
-    background-position:center;
-    color:white;
-}
+        /* TOTAIS DA OC */
+        .totais-oc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; background: #15181c; padding: 15px; border-radius: 12px; }
+        .total-destaque { grid-column: span 2; background: #1a1d23; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #2196f3; margin-top: 5px; }
+        .total-destaque p { font-size: 11px; color: #2196f3; font-weight: bold; }
+        .total-destaque h3 { font-size: 22px; color: #fff; }
 
-.hero h1{
-    font-size:3rem;
-    margin-bottom:15px;
-}
+        /* AREA DE IMPRESSÃO EXCLUSIVA - ESTRUTURA REQUISITADA */
+        #container-impressao-direta {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; color: #1e293b; z-index: 99999; padding: 30px; overflow-y: auto;
+        }
+        .btn-voltar-sistema { 
+            background: #334155; color: white; border: none; padding: 8px 16px; 
+            border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 12px; 
+            margin-bottom: 20px; text-transform: uppercase;
+        }
 
-.hero p{
-    font-size:1.2rem;
-    max-width:700px;
-}
+        .pdf-wrapper { max-width: 800px; margin: 0 auto; background: #fff; font-size: 12px; color: #1e293b; }
 
-.btn{
-    margin-top:25px;
-    display:inline-block;
-    background:#25D366;
-    color:white;
-    padding:15px 30px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:bold;
-}
+        /* Cabeçalho solicitado: Nome da empresa e CNPJ embaixo */
+        .pdf-header-empresa { border-bottom: 2px solid #1e293b; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end;}
+        .pdf-header-empresa h1 { font-size: 20px; font-weight: 800; color: #1e293b; margin: 0; line-height: 1.1; }
+        .pdf-header-empresa p { font-size: 12px; color: #475569; margin: 2px 0 0 0; font-weight: 600; }
+        .pdf-num-oc { font-size: 14px; font-weight: 800; color: #0f172a; }
 
-section{
-    max-width:1200px;
-    margin:auto;
-    padding:80px 20px;
-}
+        /* Dados em sequência: Cliente, Placa, KM, Data, Vencimento */
+        .pdf-bloco-cliente { margin-bottom: 10px; }
+        .pdf-bloco-cliente strong { font-size: 9px; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 1px; }
+        .pdf-bloco-cliente span { font-size: 15px; font-weight: 700; color: #0f172a; }
 
-.titulo{
-    text-align:center;
-    margin-bottom:40px;
-    color:#0f172a;
-}
+        .pdf-grid-dados { display: flex; gap: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 8px 12px; margin-bottom: 15px; }
+        .pdf-dado-col { flex: 1; }
+        .pdf-dado-col strong { font-size: 9px; color: #64748b; text-transform: uppercase; display: block; }
+        .pdf-dado-col span { font-size: 12px; font-weight: 600; color: #1e293b; }
 
-.cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:20px;
-}
+        /* Tabela: Tipo, Descrição, Qtd, Preço Unitário, Valor Total */
+        .pdf-tabela { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .pdf-tabela th { background: #1e293b; color: #ffffff; text-align: left; padding: 6px 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .pdf-tabela td { padding: 7px 8px; border-bottom: 1px solid #e2e8f0; font-size: 12px; color: #334155; }
+        .pdf-tabela tr:nth-child(even) { background: #f8fafc; }
 
-.card{
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 0 15px rgba(0,0,0,.08);
-}
+        /* Rodapé: Desconto e Valor Total Embaixo */
+        .pdf-financeiro-rodape { display: flex; justify-content: flex-end; }
+        .pdf-caixa-totais { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 4px; width: 100%; max-width: 260px; }
+        .pdf-caixa-totais p { display: flex; justify-content: space-between; margin: 4px 0; color: #475569; font-size: 11px; }
+        .pdf-caixa-totais p span { color: #1e293b; font-weight: 500; }
+        .pdf-caixa-totais .linha-total-final { border-top: 1px dashed #cbd5e1; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .pdf-caixa-totais .linha-total-final text { font-weight: 700; color: #0f172a; text-transform: uppercase; font-size: 11px; }
+        .pdf-caixa-totais .linha-total-final h3 { font-size: 15px; color: #0f172a; font-weight: 800; }
 
-.card h3{
-    margin-bottom:10px;
-}
+        /* RESPONSIVIDADE DO SISTEMA */
+        @media (min-width: 600px) {
+            .form-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .full { grid-column: span 3; }
+            .meio { grid-column: span 2; }
+            .abas { justify-content: center; }
+            .clientes-grid, .historico-grid { grid-template-columns: repeat(2, 1fr); }
+            .item-oc-linha { grid-template-columns: 120px 2fr 70px 110px 110px auto; gap: 10px; align-items: end; }
+            .totais-oc-grid { grid-template-columns: repeat(3, 1fr); }
+            .total-destaque { grid-column: span 1; margin-top: 0; display: flex; flex-direction: column; justify-content: center; }
+        }
+        @media (min-width: 900px) {
+            .clientes-grid, .historico-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .topo { flex-direction: column; align-items: center; text-align: center; }
+            .pesquisa-area { max-width: 100%; }
+        }
 
-.contato{
-    background:#0f172a;
-    color:white;
-    border-radius:15px;
-    text-align:center;
-    padding:40px;
-}
-
-footer{
-    background:#111;
-    color:white;
-    text-align:center;
-    padding:20px;
-}
-
-.whatsapp{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    width:65px;
-    height:65px;
-    border-radius:50%;
-    background:#25D366;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-decoration:none;
-    color:white;
-    font-size:30px;
-}
-
-@media(max-width:768px){
-
-.hero h1{
-    font-size:2rem;
-}
-
-.menu{
-    display:none;
-}
-
-}
-</style>
+        /* REGRAS NATIVAS DE IMPRESSÃO */
+        @media print {
+            body { background: white !important; color: black !important; }
+            .btn-voltar-sistema { display: none !important; }
+            #container-impressao-direta { position: absolute; height: auto; overflow: visible; padding: 0; top:0; left:0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-<nav>
-<div class="logo">AMM VÁLVULAS</div>
+<div id="container-impressao-direta"></div>
 
-<div class="menu">
-<a href="#servicos">Serviços</a>
-<a href="#empresa">Empresa</a>
-<a href="#contato">Contato</a>
+<div id="conteudo-principal-sistema">
+    <header>
+        <div class="topo">
+            <div class="logo-area">
+                <h1>AMM VÁLVULAS</h1>
+                <p>CNPJ: 62.125.027/0001-68</p>
+            </div>
+            <div class="pesquisa-area">
+                <input type="text" id="campoPesquisa" placeholder="Pesquisar..." oninput="filtrarClientesGeral()">
+            </div>
+        </div>
+    </header>
+
+    <div class="abas">
+        <button class="btn-aba ativa" id="aba-cadastro-btn" onclick="abrirAba(event, 'cadastro')">1. CADASTRO</button>
+        <button class="btn-aba" id="aba-clientes-btn" onclick="abrirAba(event, 'clientes')">2. CLIENTES</button>
+        <button class="btn-aba" id="aba-os-btn" onclick="abrirAba(event, 'os')">3. NOVA OC</button>
+        <button class="btn-aba" id="aba-historico-btn" onclick="abrirAba(event, 'historico')">4. HISTÓRICO</button>
+        <button class="btn-aba" onclick="abrirAba(event, 'financeiro')">5. FINANCEIRO</button>
+        <button class="btn-aba" onclick="abrirAba(event, 'devedores')">6. DEVEDORES</button>
+    </div>
+
+    <main>
+        <div id="cadastro" class="conteudo-aba ativo">
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <h2 id="titulo-form">CADASTRO DE CLIENTE</h2>
+                <input type="hidden" id="editando-id" value="">
+                <div class="form-grid">
+                    <div class="full"><label>Nome / Razão Social</label><input type="text" id="form-nome"></div>
+                    <div><label>CPF / CNPJ</label><input type="text" id="form-documento"></div>
+                    <div><label>WhatsApp</label><input type="text" id="form-whatsapp"></div>
+                    <div class="full"><label>E-mail</label><input type="email" id="form-email"></div>
+                    <div class="full"><label>Endereço Completo</label><input type="text" id="form-endereco"></div>
+                    <div class="full"><label>Cidade / UF</label><input type="text" id="form-cidade"></div>
+                </div>
+                <button class="btn-salvar" onclick="salvarCliente()">SALVAR CLIENTE</button>
+            </div>
+        </div>
+
+        <div id="clientes" class="conteudo-aba">
+            <div class="card">
+                <h2>CLIENTES CADASTRADOS (A-Z)</h2>
+                <div class="clientes-grid" id="lista-clientes"></div>
+            </div>
+        </div>
+
+        <div id="os" class="conteudo-aba">
+            <div class="card">
+                <h2>DADOS GERAIS DA ORDEM DE COMPRA (OC)</h2>
+                <input type="hidden" id="oc-editando-id" value="">
+                <div class="form-grid">
+                    <div class="meio">
+                        <label>Selecionar Cliente</label>
+                        <select id="oc-cliente">
+                            <option value="">-- Escolha um Cliente --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Mecânico</label>
+                        <select id="oc-mecanico">
+                            <option value="Abel">Abel</option>
+                            <option value="Igor">Igor</option>
+                        </select>
+                    </div>
+                    <div><label>Placa do Veículo</label><input type="text" id="oc-placa" placeholder="ABC-1234"></div>
+                    <div><label>KM Atual</label><input type="number" id="oc-km" placeholder="0"></div>
+                    <div><label>Data de Emissão</label><input type="date" id="oc-emissao" readonly></div>
+                    <div><label>Data de Vencimento (15d)</label><input type="date" id="oc-vencimento"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>ITENS DA ORDEM DE COMPRA</h2>
+                <div id="oc-itens-container"></div>
+                <button class="btn-adicionar-item" onclick="adicionarLinhaItem()">+ ADICIONAR ITEM</button>
+            </div>
+
+            <div class="card">
+                <h2>FECHAMENTO</h2>
+                <div class="totais-oc-grid">
+                    <div><label>Total Bruto Itens (R$)</label><input type="number" id="oc-total-bruto" value="0.00" readonly style="background:#1a1d23; color:#777;"></div>
+                    <div><label>Valor de Entrada (R$)</label><input type="number" id="oc-entrada" value="0.00" oninput="calcularTotaisFinais()"></div>
+                    <div><label>Desconto (R$)</label><input type="number" id="oc-desconto" value="0.00" oninput="calcularTotaisFinais()"></div>
+
+                    <div class="total-destaque">
+                        <p>TOTAL LÍQUIDO A PAGAR</p>
+                        <h3 id="oc-total-final">R$ 0,00</h3>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button class="btn-salvar" id="btn-salvar-oc" onclick="salvarOC()">SALVAR ORDEM DE COMPRA</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="historico" class="conteudo-aba">
+            <div class="card">
+                <h2>HISTÓRICO DE ORDENS DE COMPRA (ORDEM CRONOLÓGICA)</h2>
+                <div class="historico-grid" id="lista-historico"></div>
+            </div>
+        </div>
+        <div id="financeiro" class="conteudo-aba">
+    <div class="card">
+        <h2>CONTROLE FINANCEIRO (A-Z)</h2>
+        <table style="width: 100%; border-collapse: collapse; background: #15181c; color: white; font-size: 13px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #333; color: #2196f3;">
+                    <th style="padding: 10px; text-align: left;">Cliente</th>
+                    <th style="padding: 10px;">Vencimento</th>
+                    <th style="padding: 10px;">Valor</th>
+                    <th style="padding: 10px;">Status</th>
+                </tr>
+            </thead>
+            <tbody id="lista-financeira"></tbody>
+        </table>
+    </div>
 </div>
 
-</nav>
-</header>
-
-<section class="hero">
-
-<h1>AMM Válvulas & Mecânica</h1>
-
-<p>
-Especialistas em válvulas pneumáticas, sistemas de freios e mecânica pesada.
-Atendimento rápido, qualidade e confiança.
-</p>
-
-<a
-class="btn"
-href="https://wa.me/5565992426097"
-target="_blank">
-Solicitar Orçamento
-</a>
-
-</section>
-
-<section id="servicos">
-
-<h2 class="titulo">Nossos Serviços</h2>
-
-<div class="cards">
-
-<div class="card">
-<h3>Válvulas Pneumáticas</h3>
-<p>Manutenção, revisão e troca de válvulas para caminhões.</p>
+    </main>
 </div>
 
-<div class="card">
-<h3>Sistema de Freios</h3>
-<p>Diagnóstico e reparos completos em freios pneumáticos.</p>
-</div>
+<script>
+    let clientesBD = [
+        { id: 1, nome: "AMM Válvulas Filial", documento: "62.125.027/0002-49", whatsapp: "(11) 98888-2222", email: "filial@ammvalvulas.com.br", endereco: "Rua das Juntas, 45", cidade: "Santos / SP" },
+        { id: 2, nome: "Açoes Norte Distribuidora", documento: "12.345.678/0001-00", whatsapp: "(11) 99999-1111", email: "contato@aconorte.com.br", endereco: "Av. Industrial, 1500", cidade: "São Paulo / SP" },
+        { id: 3, nome: "Usinagem Zênite Ltda", documento: "98.765.432/0001-99", whatsapp: "(21) 97777-3333", email: "suporte@zenite.com.br", endereco: "Rodovia BR-101, Km 20", cidade: "Macabu / RJ" }
+    ];
 
-<div class="card">
-<h3>Mecânica Geral</h3>
-<p>Serviços preventivos e corretivos para veículos pesados.</p>
-</div>
+    let historicoOC = [
+        { id: 1, clienteId: 1, clienteNome: "AMM Válvulas Filial", mecanico: "Igor", placa: "ABC-1234", km: "12000", emissao: "2026-05-10", vencimento: "2026-05-25", totalBruto: "250.00", entrada: "0.00", desconto: "0.00", totalLiquido: 250.00, itens: [{ tipo: "Mão de Obra", desc: "Revisão Geral", qtd: 1, valor: "250.00", total: "250.00" }] },
+        { id: 2, clienteId: 2, clienteNome: "Açoes Norte Distribuidora", mecanico: "Abel", placa: "KJG-9A82", km: "84200", emissao: "2026-06-22", vencimento: "2026-07-07", totalBruto: "850.00", entrada: "100.00", desconto: "50.00", totalLiquido: 700.00, itens: [{ tipo: "Peça Mecânica", desc: "Válvula Reguladora", qtd: 2, valor: "425.00", total: "850.00" }] }
+    ];
 
-<div class="card">
-<h3>Atendimento Especializado</h3>
-<p>Equipe preparada para resolver problemas com rapidez.</p>
-</div>
+    function abrirAba(evt, nomeAba) {
+        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
+        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
+        document.getElementById(nomeAba).style.display = 'block';
+        if(evt) evt.currentTarget.classList.add('ativa');
 
-</div>
+        if(nomeAba === 'clientes') renderizarClientes();
+        if(nomeAba === 'os') atualizarConfiguracoesIniciaisOC();
+        if(nomeAba === 'historico') renderizarHistorico();
+    }
 
-</section>
+    function renderizarClientes(filtro = '') {
+        const grid = document.getElementById('lista-clientes');
+        grid.innerHTML = '';
+        let ordenados = [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome));
+        if(filtro) ordenados = ordenados.filter(c => c.nome.toLowerCase().includes(filtro.toLowerCase()));
 
-<section id="empresa">
+        if(ordenados.length === 0) {
+            grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhum cliente encontrado.</p>';
+            return;
+        }
+        ordenados.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'cliente-caixa';
+            div.innerHTML = `
+                <div>
+                    <div class="cliente-nome">${c.nome}</div>
+                    <div class="cliente-info"><span>CPF / CNPJ</span>${c.documento || '-'}</div>
+                    <div class="cliente-info"><span>WhatsApp</span>${c.whatsapp || '-'}</div>
+                    <div class="cliente-info"><span>E-mail</span>${c.email || '-'}</div>
+                </div>
+                <div class="cliente-acoes">
+                    <button class="btn-acao btn-editar" onclick="prepararEdicao(${c.id})">Editar</button>
+                    <button class="btn-acao btn-excluir" onclick="excluirCliente(${c.id})">Excluir</button>
+                </div>`;
+            grid.appendChild(div);
+        });
+    }
 
-<h2 class="titulo">Sobre a Empresa</h2>
+    function salvarCliente() {
+        const idEditando = document.getElementById('editando-id').value;
+        const nome = document.getElementById('form-nome').value.trim();
+        const documento = document.getElementById('form-documento').value.trim();
+        const whatsapp = document.getElementById('form-whatsapp').value.trim();
+        const email = document.getElementById('form-email').value.trim();
+        const endereco = document.getElementById('form-endereco').value.trim();
+        const cidade = document.getElementById('form-cidade').value.trim();
 
-<p style="text-align:center;max-width:900px;margin:auto;">
-A AMM Válvulas & Mecânica atua na manutenção de caminhões e veículos pesados,
-oferecendo serviços especializados em válvulas pneumáticas, sistemas de freio
-e mecânica geral.
-</p>
+        if(!nome) return alert('Preencha o Nome / Razão Social.');
 
-</section>
+        if(idEditando) {
+            const idx = clientesBD.findIndex(c => c.id == idEditando);
+            if(idx !== -1) clientesBD[idx] = { id: parseInt(idEditando), nome, documento, whatsapp, email, endereco, cidade };
+        } else {
+            const novoId = clientesBD.length > 0 ? Math.max(...clientesBD.map(c => c.id)) + 1 : 1;
+            clientesBD.push({ id: novoId, nome, documento, whatsapp, email, endereco, cidade });
+        }
+        limparFormulario();
+        abrirAba(null, 'clientes');
+        document.getElementById('aba-clientes-btn').classList.add('ativa');
+    }
 
-<section id="contato">
+    function excluirCliente(id) {
+        if(confirm("Deseja excluir este cliente?")) {
+            clientesBD = clientesBD.filter(c => c.id !== id);
+            renderizarClientes();
+        }
+    }
 
-<div class="contato">
+    function prepararEdicao(id) {
+        const c = clientesBD.find(c => c.id === id);
+        if(!c) return;
+        document.getElementById('editando-id').value = c.id;
+        document.getElementById('form-nome').value = c.nome;
+        document.getElementById('form-documento').value = c.documento;
+        document.getElementById('form-whatsapp').value = c.whatsapp;
+        document.getElementById('form-email').value = c.email;
+        document.getElementById('form-endereco').value = c.endereco;
+        document.getElementById('form-cidade').value = c.cidade;
+        document.getElementById('titulo-form').innerText = "ALTERAR DADOS DO CLIENTE";
+        abrirAba(null, 'cadastro');
+        document.getElementById('aba-cadastro-btn').classList.add('ativa');
+    }
 
-<h2>Entre em Contato</h2>
+    function limparFormulario() {
+        document.getElementById('editando-id').value = '';
+        document.getElementById('form-nome').value = '';
+        document.getElementById('form-documento').value = '';
+        document.getElementById('form-whatsapp').value = '';
+        document.getElementById('form-email').value = '';
+        document.getElementById('form-endereco').value = '';
+        document.getElementById('form-cidade').value = '';
+        document.getElementById('titulo-form').innerText = "CADASTRO DE CLIENTE";
+    }
 
-<br>
+    function filtrarClientesGeral() {
+        const termo = document.getElementById('campoPesquisa').value;
+        if(document.getElementById('clientes').style.display === 'block') renderizarClientes(termo);
+        if(document.getElementById('historico').style.display === 'block') renderizarHistorico(termo);
+    }
 
-<p><strong>WhatsApp:</strong> (65) 99242-6097</p>
+    /* LÓGICA DA NOVA OC */
+    function atualizarConfiguracoesIniciaisOC() {
+        if(document.getElementById('oc-editando-id').value !== "") return; 
 
-<br>
+        const select = document.getElementById('oc-cliente');
+        select.innerHTML = '<option value="">-- Escolha um Cliente --</option>';
+        [...clientesBD].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
+            select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+        });
 
-<p><strong>Atendimento especializado para caminhões e carretas.</strong></p>
+        const hoje = new Date();
+        document.getElementById('oc-emissao').value = hoje.toISOString().split('T')[0];
+        const vencimento = new Date();
+        vencimento.setDate(hoje.getDate() + 15);
+        document.getElementById('oc-vencimento').value = vencimento.toISOString().split('T')[0];
 
-<br>
+        const container = document.getElementById('oc-itens-container');
+        if(container.children.length === 0) adicionarLinhaItem();
+    }
 
-<a
-class="btn"
-href="https://wa.me/5565992426097"
-target="_blank">
-Falar Agora
-</a>
+    function adicionarLinhaItem(tipo="", desc="", qtd=1, valor="0.00", total="0.00") {
+        const container = document.getElementById('oc-itens-container');
+        const timestamp = Date.now() + Math.random();
+        const linha = document.createElement('div');
+        linha.className = 'item-oc-linha';
+        linha.id = `item-${timestamp}`;
 
-</div>
+        linha.innerHTML = `
+            <div>
+                <label>Tipo</label>
+                <select class="item-tipo">
+                    <option value="Mão de Obra" ${tipo === "Mão de Obra" ? "selected" : ""}>Mão de Obra</option>
+                    <option value="Peça Mecânica" ${tipo === "Peça Mecânica" ? "selected" : ""}>Peça Mecânica</option>
+                </select>
+            </div>
+            <div><label>Descrição</label><input type="text" class="item-desc" placeholder="Ex: Manutenção" value="${desc}"></div>
+            <div><label>Qtd</label><input type="number" class="item-qtd" value="${qtd}" min="1" oninput="calcularTotalItem('${timestamp}')"></div>
+            <div><label>Preço Unit. (R$)</label><input type="number" class="item-valor" value="${valor}" step="0.01" oninput="calcularTotalItem('${timestamp}')"></div>
+            <div><label>Preço Total (R$)</label><input type="number" class="item-total" value="${total}" readonly style="background:#121212; color:#aaa;"></div>
+            <button class="btn-remover-item" onclick="removerLinhaItem('${timestamp}')">X</button>
+        `;
+        container.appendChild(linha);
+        calcularTotaisFinais();
+    }
 
-</section>
+    function removerLinhaItem(id) {
+        const linha = document.getElementById(`item-${id}`);
+        if(linha) { linha.remove(); calcularTotaisFinais(); }
+    }
 
-<footer>
-© 2026 AMM Válvulas & Mecânica
-</footer>
+    function calcularTotalItem(id) {
+        const linha = document.getElementById(`item-${id}`);
+        if(linha) {
+            const qtd = parseFloat(linha.querySelector('.item-qtd').value) || 0;
+            const valor = parseFloat(linha.querySelector('.item-valor').value) || 0;
+            linha.querySelector('.item-total').value = (qtd * valor).toFixed(2);
+        }
+        calcularTotaisFinais();
+    }
 
-<a
-class="whatsapp"
-href="https://wa.me/5565992426097"
-target="_blank">
-☎
-</a>
+    function calcularTotaisFinais() {
+        let bruto = 0;
+        document.querySelectorAll('.item-total').forEach(input => bruto += parseFloat(input.value) || 0);
+        document.getElementById('oc-total-bruto').value = bruto.toFixed(2);
 
-<!-- Firebase -->
-<script type="module">
+        const entrada = parseFloat(document.getElementById('oc-entrada').value) || 0;
+        const desconto = parseFloat(document.getElementById('oc-desconto').value) || 0;
+        const final = bruto - entrada - desconto;
+        document.getElementById('oc-total-final').innerText = `R$ ${final.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+    function salvarOC() {
+        const clienteId = document.getElementById('oc-cliente').value;
+        if(!clienteId) return alert("Por favor, selecione um cliente.");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC8RewsJ1mGmpraIAvH1WTiZkmKDU5z5X4",
-  authDomain: "amm-valvulas.firebaseapp.com",
-  projectId: "amm-valvulas",
-  storageBucket: "amm-valvulas.firebasestorage.app",
-  messagingSenderId: "747172641468",
-  appId: "1:747172641468:web:c90505d70cb9bcdf6eaeb9",
-  measurementId: "G-4L5K9337CV"
-};
+        const idEditando = document.getElementById('oc-editando-id').value;
+        const clienteNome = document.getElementById('oc-cliente').options[document.getElementById('oc-cliente').selectedIndex].text;
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+        let itensColetados = [];
+        document.querySelectorAll('.item-oc-linha').forEach(l => {
+            itensColetados.push({
+                tipo: l.querySelector('.item-tipo').value,
+                desc: l.querySelector('.item-desc').value,
+                qtd: parseInt(l.querySelector('.item-qtd').value) || 1,
+                valor: l.querySelector('.item-valor').value,
+                total: l.querySelector('.item-total').value
+            });
+        });
 
-console.log("Firebase conectado com sucesso!");
+        const dadosOC = {
+            id: idEditando ? parseInt(idEditando) : (historicoOC.length > 0 ? Math.max(...historicoOC.map(o => o.id)) + 1 : 1),
+            clienteId: parseInt(clienteId),
+            clienteNome: clienteNome,
+            mecanico: document.getElementById('oc-mecanico').value,
+            placa: document.getElementById('oc-placa').value.toUpperCase().trim() || '-',
+            km: document.getElementById('oc-km').value || '0',
+            emissao: document.getElementById('oc-emissao').value,
+            vencimento: document.getElementById('oc-vencimento').value,
+            totalBruto: document.getElementById('oc-total-bruto').value,
+            entrada: document.getElementById('oc-entrada').value,
+            desconto: document.getElementById('oc-desconto').value,
+            totalLiquido: parseFloat(document.getElementById('oc-total-bruto').value) - parseFloat(document.getElementById('oc-entrada').value) - parseFloat(document.getElementById('oc-desconto').value),
+            itens: itensColetados
+        };
+
+        if(idEditando) {
+            const idx = historicoOC.findIndex(o => o.id == idEditando);
+            if(idx !== -1) historicoOC[idx] = dadosOC;
+        } else {
+            historicoOC.push(dadosOC);
+        }
+
+        limparFormularioOC();
+        alert("Ordem de Compra salva com sucesso!");
+        abrirAba(null, 'historico');
+        document.getElementById('aba-historico-btn').classList.add('ativa');
+    }
+
+    function limparFormularioOC() {
+        document.getElementById('oc-editando-id').value = '';
+        document.getElementById('oc-cliente').value = '';
+        document.getElementById('oc-placa').value = '';
+        document.getElementById('oc-km').value = '';
+        document.getElementById('oc-entrada').value = '0.00';
+        document.getElementById('oc-desconto').value = '0.00';
+        document.getElementById('oc-itens-container').innerHTML = '';
+        document.getElementById('btn-salvar-oc').innerText = "SALVAR ORDEM DE COMPRA";
+    }
+
+    /* HISTÓRICO */
+    function renderizarHistorico(filtro = '') {
+        const grid = document.getElementById('lista-historico');
+        grid.innerHTML = '';
+
+        let ordenados = [...historicoOC].sort((a, b) => new Date(b.emissao) - new Date(a.emissao));
+        if(filtro) ordenados = ordenados.filter(o => o.clienteNome.toLowerCase().includes(filtro.toLowerCase()) || o.placa.toLowerCase().includes(filtro.toLowerCase()));
+
+        if(ordenados.length === 0) {
+            grid.innerHTML = '<p style="color:#777; font-size:13px;">Nenhuma Ordem de Compra encontrada.</p>';
+            return;
+        }
+
+        ordenados.forEach(oc => {
+            const dataFormatada = oc.emissao.split('-').reverse().join('/');
+            const div = document.createElement('div');
+            div.className = 'oc-caixa';
+            div.innerHTML = `
+                <div>
+                    <div class="oc-titulo">OC #${oc.id} - ${oc.clienteNome}</div>
+                    <div class="oc-info"><span>📅 Emissão</span>${dataFormatada}</div>
+                    <div class="oc-info"><span>🚘 Placa do Veículo</span>${oc.placa}</div>
+                    <div class="oc-info"><span>🔧 Mecânico</span>${oc.mecanico}</div>
+                    <div class="oc-info"><span>💰 Valor Total Líquido</span>R$ ${oc.totalLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="oc-acoes">
+                    <button class="btn-acao btn-editar" onclick="editarOC(${oc.id})">Editar</button>
+                    <button class="btn-acao btn-excluir" onclick="excluirOC(${oc.id})">Excluir</button>
+                    <button class="btn-acao btn-pdf" onclick="visualizarPDF(${oc.id})">PDF</button>
+                </div>`;
+            grid.appendChild(div);
+        });
+    }
+
+    function editarOC(id) {
+        const oc = historicoOC.find(o => o.id === id);
+        if(!oc) return;
+
+        document.getElementById('oc-editando-id').value = oc.id;
+
+        const selectCliente = document.getElementById('oc-cliente');
+        selectCliente.innerHTML = '';
+        clientesBD.forEach(c => selectCliente.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+        selectCliente.value = oc.clienteId;
+
+        document.getElementById('oc-mecanico').value = oc.mecanico;
+        document.getElementById('oc-placa').value = oc.placa;
+        document.getElementById('oc-km').value = oc.km;
+        document.getElementById('oc-emissao').value = oc.emissao;
+        document.getElementById('oc-vencimento').value = oc.vencimento;
+        document.getElementById('oc-entrada').value = oc.entrada;
+        document.getElementById('oc-desconto').value = oc.desconto;
+
+        const container = document.getElementById('oc-itens-container');
+        container.innerHTML = '';
+        oc.itens.forEach(i => adicionarLinhaItem(i.tipo, i.desc, i.qtd, i.valor, i.total));
+
+        document.getElementById('btn-salvar-oc').innerText = "ATUALIZAR ORDEM DE COMPRA";
+
+        document.querySelectorAll('.conteudo-aba').forEach(a => a.style.display = 'none');
+        document.querySelectorAll('.btn-aba').forEach(b => b.classList.remove('ativa'));
+        document.getElementById('os').style.display = 'block';
+        document.getElementById('aba-os-btn').classList.add('ativa');
+    }
+
+    function excluirOC(id) {
+        if(confirm("Tem certeza que deseja remover esta Ordem de Compra definitivamente?")) {
+            historicoOC = historicoOC.filter(o => o.id !== id);
+            renderizarHistorico();
+        }
+    }
+
+    /* VISUALIZAÇÃO DO PDF ATUALIZADO CONFORME REQUISITADO */
+    function visualizarPDF(id) {
+        const oc = historicoOC.find(o => o.id === id);
+        if(!oc) return;
+
+        let linhasHtml = '';
+        oc.itens.forEach(i => {
+            linhasHtml += `
+                <tr>
+                    <td style="color: #475569; font-weight: bold; font-size: 11px;">${i.tipo}</td>
+                    <td style="font-weight: 500;">${i.desc || '-'}</td>
+                    <td style="text-align: center;">${i.qtd}</td>
+                    <td>R$ ${parseFloat(i.valor).toFixed(2).replace('.', ',')}</td>
+                    <td style="font-weight: 600; text-align: right;">R$ ${parseFloat(i.total).toFixed(2).replace('.', ',')}</td>
+                </tr>`;
+        });
+
+        const containerImpressao = document.getElementById('container-impressao-direta');
+
+        containerImpressao.innerHTML = `
+            <div class="pdf-wrapper">
+                <button class="btn-voltar-sistema" onclick="fecharImpressaoPDF()">← Voltar ao Sistema</button>
+                
+                <div class="pdf-header-empresa">
+                    <div>
+                        <h1>AMM VÁLVULAS</h1>
+                        <p>CNPJ: 62.125.027/0001-68</p>
+                    </div>
+                    <div class="pdf-num-oc">ORDEM DE COMPRA #00${oc.id}</div>
+                </div>
+
+                <div class="pdf-bloco-cliente">
+                    <strong>Cliente / Razão Social</strong>
+                    <span>${oc.clienteNome}</span>
+                </div>
+
+                <div class="pdf-grid-dados">
+                    <div class="pdf-dado-col">
+                        <strong>Placa</strong>
+                        <span>${oc.placa}</span>
+                    </div>
+                    <div class="pdf-dado-col">
+                        <strong>KM</strong>
+                        <span>${oc.km > 0 ? oc.km : '-'}</span>
+                    </div>
+                    <div class="pdf-dado-col">
+                        <strong>Data de Emissão</strong>
+                        <span>${oc.emissao.split('-').reverse().join('/')}</span>
+                    </div>
+                    <div class="pdf-dado-col">
+                        <strong>Vencimento</strong>
+                        <span>${oc.vencimento.split('-').reverse().join('/')}</span>
+                    </div>
+                </div>
+
+                <table class="pdf-tabela">
+                    <thead>
+                        <tr>
+                            <th style="width: 18%;">Tipo</th>
+                            <th style="width: 44%;">Descrição do Item / Serviço</th>
+                            <th style="width: 8%; text-align: center;">Qtd</th>
+                            <th style="width: 15%;">Preço Unit.</th>
+                            <th style="width: 15%; text-align: right;">Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${linhasHtml}
+                    </tbody>
+                </table>
+
+                <div class="pdf-financeiro-rodape">
+                    <div class="pdf-caixa-totais">
+                        <p>Subtotal Bruto: <span>R$ ${parseFloat(oc.totalBruto).toFixed(2).replace('.', ',')}</span></p>
+                        <p>Desconto Comercial: <span>(-) R$ ${parseFloat(oc.desconto).toFixed(2).replace('.', ',')}</span></p>
+                        <div class="linha-total-final">
+                            <text>Valor Total</text>
+                            <h3>R$ ${oc.totalLiquido.toFixed(2).replace('.', ',')}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('conteudo-principal-sistema').style.display = 'none';
+        containerImpressao.style.display = 'block';
+
+        setTimeout(() => {
+            window.print();
+        }, 300);
+    }
+
+    function fecharImpressaoPDF() {
+        document.getElementById('container-impressao-direta').style.display = 'none';
+        document.getElementById('conteudo-principal-sistema').style.display = 'block';
+    }
+
+    renderizarClientes();
+    function renderizarFinanceiro() {
+    const tbody = document.getElementById('lista-financeira');
+    tbody.innerHTML = '';
+    let lista = [...historicoOC].sort((a, b) => a.clienteNome.localeCompare(b.clienteNome));
+    lista.forEach((oc, index) => {
+        const dataVenc = oc.vencimento.split('-').reverse().join('/');
+        const tr = document.createElement('tr');
+        if (oc.pago === undefined) oc.pago = false;
+        tr.innerHTML = `
+            <td style="padding: 10px;">${oc.clienteNome}</td>
+            <td style="padding: 10px; text-align: center;">${dataVenc}</td>
+            <td style="padding: 10px;">R$ ${parseFloat(oc.totalLiquido).toFixed(2).replace('.', ',')}</td>
+            <td style="padding: 10px; text-align: center;">
+                <input type="checkbox" ${oc.pago ? 'checked' : ''} onchange="togglePago(${index})">
+                <span style="font-weight:bold; color: ${oc.pago ? '#4caf50' : '#f44336'}">${oc.pago ? 'PAGO' : 'PENDENTE'}</span>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function togglePago(index) {
+    historicoOC[index].pago = !historicoOC[index].pago;
+    renderizarFinanceiro(); 
+}
 
 </script>
-
 </body>
-</html>
+<html>
